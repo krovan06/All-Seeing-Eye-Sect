@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Вход в систему</title>
+    <title>Вход</title>
 </head>
 <body>
     <h2>Вход в систему</h2>
-    <form method="post">
+    <form method="POST">
         {% csrf_token %}
         <div>
             <label for="id_username">Имя пользователя:</label>
@@ -18,8 +18,6 @@
         </div>
         <button type="submit">Войти</button>
     </form>
-    {% if next %}
-        <input type="hidden" name="next" value="{{ next }}">
-    {% endif %}
+    <a href="{% url 'register' %}">Нет аккаунта? Зарегистрироваться</a>
 </body>
 </html>
