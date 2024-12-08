@@ -10,6 +10,21 @@ from django.views import View
 @login_required
 def redirect_to_profile(request):
     return redirect(f'/user/id/{request.user.id}/')
+
+@login_required
+def user_edit_profile(request, id):
+    user = get_object_or_404(User, id=id)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile', id=user.id)  # Перенаправляем на страницу профиля
+    else:
+        form = UserForm(instance=user)
+
+    return render(request, 'Profile/user_edit_profile.html', {'form': form, 'user': user})
+
 @login_required
 def user_profile(request, id):
     user = get_object_or_404(User, id=id)
@@ -22,7 +37,7 @@ def user_profile(request, id):
     else:
         form = UserForm(instance=user)
 
-    return render(request, 'Profile/user_profile.html', {'form': form, 'user': user})
+    return render(request, 'Profile/user_lk.html', {'form': form, 'user': user})
 
 def register(request):
     if request.method == "POST":
