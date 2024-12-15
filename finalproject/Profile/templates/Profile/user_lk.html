@@ -58,8 +58,14 @@
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
         <div class="btn-group">
+            {% if user.is_staff %}
+            <a href="{% url 'manage_requests' %}" class="btn btn-primary">Управление заявками</a>
+            {% endif %}
             <a href="/user/id/{{ user.id }}/edit/" class="btn">Редактировать профиль</a>
+            <a href="{% url 'news_feed' %}" class="btn">Лента новостей</a>
+            <a href="{% url 'create_request' %}" class="btn btn-primary mt-3">Создать заявку</a>
             <a href="{% url 'logout' %}" class="btn" style="background-color: #dc3545;">Выйти</a>
+            <a href="{% url 'my_requests' %}" class="btn btn-primary">Мои заявки</a>
         </div>
     </div>
 </body>
