@@ -54,6 +54,14 @@
     <div class="container">
         <h1>Личный кабинет</h1>
         <div class="user-info">
+            <div style="background-image: url({% if user.userprofile.background %}{{ user.userprofile.background.url }}{% else %}''{% endif %}); background-size: cover; height: 300px;">
+                {% if user.userprofile.avatar %}
+                    <img src="{{ user.userprofile.avatar.url }}" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%;">
+                {% else %}
+                    <img src="/static/default_avatar.png" alt="Default Avatar" style="width: 150px; height: 150px; border-radius: 50%;">
+                {% endif %}
+            </div>
+            {{ form.errors.all }}
             <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>

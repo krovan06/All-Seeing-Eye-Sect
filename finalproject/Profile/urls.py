@@ -23,8 +23,6 @@ urlpatterns = [
     path('requests/<int:id>/', view_request_detail, name='view_request_detail'),
     path('requests/<int:id>/edit/', edit_request, name='edit_request'),
     path('requests/<int:request_id>/user-delete/', delete_request_by_user, name='delete_request_by_user'),
-    path('news/', news_feed, name='news_feed'),
-]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('news/', news_feed, name='news_feed'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

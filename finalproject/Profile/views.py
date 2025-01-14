@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .forms import UserForm, UserRegistrationForm, RequestForm
+from .forms import UserForm, UserRegistrationForm, RequestForm, ProfileEditForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.views import View
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from .models import Request
+from .models import *
 from django.http import HttpResponseForbidden
 from django.db.models import Q
 
@@ -119,17 +119,23 @@ def redirect_to_profile(request):
 
 @login_required
 def user_edit_profile(request, id):
-    user = get_object_or_404(User, id=id)
+    user = request.user
+
+    # Убедимся, что у пользователя есть профиль
+    if not hasattr(user, 'userprofile'):
+        UserProfile.objects.create(user=user)
+
+    profile = user.userprofile
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=user)
         if form.is_valid():
             form.save()
-            return redirect('user_profile', id=user.id)  # Перенаправляем на страницу профиля
+            return redirect('user_profile', id=user.id)
     else:
-        form = UserForm(instance=user)
+        form = ProfileEditForm(instance=profile, user=user)
 
-    return render(request, 'Profile/user_edit_profile.html', {'form': form, 'user': user})
+    return render(request, 'Profile/edit_profile.html', {'form': form})
 
 @login_required
 def user_profile(request, id):

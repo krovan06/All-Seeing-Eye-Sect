@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Request(models.Model):
     STATUS_CHOICES = [
@@ -25,3 +27,30 @@ class Request(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='userprofile')
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        blank=True,
+        null=True)  # Путь к папке для аватаров
+    background = models.ImageField(
+        upload_to='backgrounds/',
+        blank=True,
+        null=True)  # Путь к папке для фона
+
+    def __str__(self):
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
