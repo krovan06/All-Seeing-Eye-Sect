@@ -11,6 +11,8 @@ urlpatterns = [
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
 
     path('', redirect_to_profile, name='redirect_to_profile'),
+    path('users/', UserListCreateView.as_view(), name='user-list-create'),
+    path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user-detail'),
 
     path('requests/', request_list, name='request_list'),
     path('requests/create/', create_request, name='create_request'),

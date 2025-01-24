@@ -10,6 +10,11 @@ from django.contrib import messages
 from .models import *
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAdminUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 def request_list(request):
     # Получаем все заявки
@@ -112,45 +117,6 @@ def reject_request(request, id):
     req.save()
     return redirect('manage_requests')
 
-
-@login_required
-def redirect_to_profile(request):
-    return redirect(f'/user/id/{request.user.id}/')
-
-@login_required
-def user_edit_profile(request, id):
-    user = request.user
-
-    # Убедимся, что у пользователя есть профиль
-    if not hasattr(user, 'userprofile'):
-        UserProfile.objects.create(user=user)
-
-    profile = user.userprofile
-
-    if request.method == 'POST':
-        form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile', id=user.id)
-    else:
-        form = ProfileEditForm(instance=profile, user=user)
-
-    return render(request, 'Profile/edit_profile.html', {'form': form})
-
-@login_required
-def user_profile(request, id):
-    user = get_object_or_404(User, id=id)
-
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile', id=user.id)  # Перенаправляем на страницу профиля
-    else:
-        form = UserForm(instance=user)
-
-    return render(request, 'Profile/user_lk.html', {'form': form, 'user': user})
-
 @login_required
 def create_request(request):
     if request.method == "POST":
@@ -193,3 +159,54 @@ def news_feed(request):
     # Получение только одобренных заявок
     approved_requests = Request.objects.filter(status='approved').order_by('-created_at')
     return render(request, 'news/news_feed.html', {'approved_requests': approved_requests})
+
+#ПОЛЬЗОВАТЕЛИ
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+# Получение, обновление и удаление конкретного пользователя
+
+class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+@login_required
+def redirect_to_profile(request):
+    return redirect(f'/user/id/{request.user.id}/')
+
+@login_required
+def user_edit_profile(request, id):
+    user = request.user
+
+    # Убедимся, что у пользователя есть профиль
+    if not hasattr(user, 'userprofile'):
+        UserProfile.objects.create(user=user)
+
+    profile = user.userprofile
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile', id=user.id)
+    else:
+        form = ProfileEditForm(instance=profile, user=user)
+
+    return render(request, 'Profile/edit_profile.html', {'form': form})
+
+@login_required
+def user_profile(request, id):
+    user = get_object_or_404(User, id=id)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile', id=user.id)  # Перенаправляем на страницу профиля
+    else:
+        form = UserForm(instance=user)
+
+    return render(request, 'Profile/user_lk.html', {'form': form, 'user': user})
