@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Лента новостей</h2>
+
+<div class="news-feed">
+    {% for request in approved_requests %}
+    <div class="news-item">
+        {% if request.file %}
+        <img src="{{ request.file.url }}" alt="{{ request.title }}" class="news-image">
+        {% endif %}
+        <h3>{{ request.title }}</h3>
+        <p>{{ request.body }}</p> <!-- Добавлено отображение основного текста -->
+        <p><small>Опубликовано: {{ request.created_at|date:"d.m.Y H:i" }}</small></p>
+    </div>
+    <hr>
+    {% empty %}
+    <p>Пока нет новостей.</p>
+    {% endfor %}
+</div>
+{% endblock %}
