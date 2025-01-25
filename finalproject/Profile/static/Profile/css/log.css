@@ -170,6 +170,19 @@
   color: rgb(123, 40, 40);
 }
 
+.forgot-password-link {
+    display: block;
+    margin-top: 10px;
+    color: #fff;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.forgot-password-link:hover {
+    color: #ffd700;
+}
+
 /*ШРИФТЫ*/
 
 .amatic-sc-regular {

@@ -1,21 +1,24 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserForm, UserRegistrationForm, RequestForm, ProfileEditForm
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views import View
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
 from .models import *
-from django.http import HttpResponseForbidden
 from django.db.models import Q
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAdminUser
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import RecoveryToken
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.conf import settings
+from django.contrib import messages
+
+
 
 def request_list(request):
     # Получаем все заявки
@@ -218,4 +221,57 @@ class DeleteAccountView(LoginRequiredMixin, View):
         user.delete()  # Удаляет объект пользователя
         logout(request)  # Завершает сессию
         return redirect('login')
+
+
+def send_recovery_email(request):
+    print("HOME")
+    if request.method == 'POST':
+        print("PIZDA")
+        email = request.POST.get('email')
+        try:
+            print("LOCH")
+            user = User.objects.get(email=email)
+            print(user, "<-user")
+            token, created = RecoveryToken.objects.get_or_create(user=user)
+            print(token, "<-token")
+            if not created:
+                token.token = uuid.uuid4()
+                token.save()
+
+            # Формирование ссылки для восстановления
+            reset_link = request.build_absolute_uri(
+                reverse('recover_account', args=[token.token])
+            )
+
+            # Отправка email
+            send_mail(
+                'Восстановление аккаунта',
+                f'Для восстановления аккаунта перейдите по ссылке: {reset_link}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            messages.success(request, 'Инструкции по восстановлению отправлены на ваш email.')
+        except User.DoesNotExist:
+            messages.error(request, 'Пользователь с таким email не найден.')
+
+    return render(request, 'recovery/send_email.html')
+
+def recover_account(request, token):
+    try:
+        recovery_token = RecoveryToken.objects.get(token=token)
+
+        if not recovery_token.is_valid():
+            messages.error(request, 'Срок действия токена истёк.')
+            return redirect('send_recovery_email')
+
+        # Восстановление: например, авторизация пользователя
+        login(request, recovery_token.user)
+        recovery_token.delete()  # Удаляем токен после использования
+        messages.success(request, 'Аккаунт успешно восстановлен.')
+        return redirect('user_profile', id=recovery_token.user.id)
+
+    except RecoveryToken.DoesNotExist:
+        messages.error(request, 'Неверный или недействительный токен.')
+        return redirect('send_recovery_email')
 

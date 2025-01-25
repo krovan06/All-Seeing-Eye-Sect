@@ -31,7 +31,7 @@
   <form method="POST" class="main-log-container">
       {% csrf_token %}
       <div class="logreg-block">
-        <h1 class="logreg-question">Мы знакомы?</h1>
+        <h1 class="logreg-question">Знакомы?</h1>
         <input type="text" class="log-line" name="username" placeholder="логин" id="id_username">
 
         <input type="password" id="password-input" class="pass-line" placeholder="Введите пароль" name="password">
@@ -41,6 +41,7 @@
             <button class="log-btn" type="submit">ПОДТВЕРДИТЬ</button>
         </div>
 
+        <a href="{% url 'send_recovery_email' %}" class="forgot-password-link">Забыли пароль?</a>
           <a href="{% url 'register' %}" class="reg-link">Нет аккаунта? Зарегистрироваться</a>
       </div>
   </form>

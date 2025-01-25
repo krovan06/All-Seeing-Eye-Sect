@@ -18,6 +18,8 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
+    path('recovery/', send_recovery_email, name='send_recovery_email'),
+    path('recovery/<uuid:token>/', recover_account, name='recover_account'),
 
     path('', redirect_to_profile, name='redirect_to_profile'),
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
