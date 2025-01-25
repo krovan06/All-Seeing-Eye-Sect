@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ request.title }}</h2>
+<p><strong>Дата создания:</strong> {{ request.created_at|date:"d.m.Y H:i" }}</p>
+<p><strong>Статус:</strong> 
+    {% if request.status == 'pending' %}
+        На рассмотрении
+    {% elif request.status == 'approved' %}
+        Одобрено
+    {% elif request.status == 'rejected' %}
+        Отклонено
+    {% endif %}
+</p>
+<p><strong>Описание:</strong> {{ request.body }}</p>
+{% if request.file %}
+<p><strong>Прикрепленный файл:</strong> <a href="{{ request.file.url }}" target="_blank">Скачать</a></p>
+{% endif %}
+<a href="{% url 'my_requests' %}" class="btn btn-secondary">Назад к списку</a>
+{% endblock %}

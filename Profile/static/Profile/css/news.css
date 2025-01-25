@@ -1,0 +1,184 @@
+body {
+  background-color: rgba(0, 0, 0, 0.85);
+  margin: 0;
+}
+
+article {
+  
+  width: 100%;
+  height: 60vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  margin-top: 15vh;
+
+  width: 100%;
+  height: 200vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*ТЕКСТ*/
+
+.news-text {
+  font-family: Rubik Mono One;
+}
+
+/*ПРИВЕТ*/
+
+.NEWS {
+  color: rgb(240, 236, 219);
+  font-family: Rubik Mono One;
+  font-size: 110px;
+}
+
+/*ШАПКА*/
+
+.news-main-header {
+  width: 100%;
+  height: 10vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-container {
+  width: 90%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px
+}
+
+.header-text {
+  text-decoration: none;
+  color: rgb(240, 236, 219);
+  transition: 0.5s;
+  font-family: Rubik Mono One;
+  font-size: 25px;
+}
+
+.logo {
+  text-decoration: none;
+  color: rgb(240, 236, 219);
+  font-family: Rubik Mono One;
+  font-size: 30px;
+  transition: 0.5s;
+}
+
+
+.logo:hover {
+  color: rgb(143, 65, 65);;
+}
+
+.news:hover {
+  color: rgb(124, 110, 20);
+  font-size: 26px;
+  text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.9);
+}
+
+.games:hover {
+  color: rgb(75, 119, 150);
+  font-size: 26px;
+  text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.9);
+}
+
+.brotherhood:hover {
+  color: rgb(90, 67, 132);
+  font-size: 26px;
+  text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.9);
+}
+
+/* ДОСКА ОБЪЯВЛЕНИЙ */
+
+.news-main-container {
+  width: 90%;
+  height: 100%;
+
+  background-color: #0e0f12;
+  border-top-left-radius: 75px;
+  border-top-right-radius: 75px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.news-main-content {
+  margin-top: 10vh;
+
+  width: 90%;
+  height: 95%;
+
+  display: flex;
+  justify-content: center;
+}
+
+.test-block {
+  width: 800px;
+  height: 916px;
+  /*width: 50%;*/
+  /*height: 40%;*/
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+
+  border-radius: 46px;
+  box-shadow: inset 0px 0px 82px 3px rgba(0, 0, 0, 0.42);
+  background: rgb(206, 203, 190);
+}
+
+.test-up-block {
+  width: 100%;
+  height: 10%;
+  flex-direction: row;
+  gap: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:  100%;
+  height: 50%;
+}
+
+.test-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40%;
+  text-align: center;
+}
+
+/*ШРИФТЫ*/
+.rubik-mono-one-regular {
+  font-family: "Rubik Mono One", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/*ЭКСПЕРЕМЕНТ*/
+
+canvas {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
