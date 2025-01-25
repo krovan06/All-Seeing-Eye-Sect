@@ -1,14 +1,23 @@
 from django.urls import path, include
 from .views import *
+from . import views
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('user/id/<int:id>/', user_profile, name='user_profile'),
+
     path('register/', register, name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
+
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
 
     path('', redirect_to_profile, name='redirect_to_profile'),
     path('users/', UserListCreateView.as_view(), name='user-list-create'),

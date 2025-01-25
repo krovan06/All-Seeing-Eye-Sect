@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import secrets
+from datetime import timedelta
+from django.utils import timezone
 
 class Request(models.Model):
     STATUS_CHOICES = [
@@ -27,6 +30,22 @@ class Request(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class AccountRecoveryToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    @classmethod
+    def generate_token(cls, user):
+        token = secrets.token_urlsafe(48)
+        return cls.objects.create(user=user, token=token)
+
+    @property
+    def is_expired(self):
+        return timezone.now() > self.created_at + timedelta(hours=24)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

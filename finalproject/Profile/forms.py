@@ -55,3 +55,4 @@ class ProfileEditForm(forms.ModelForm):
             user.save()
             profile.save()
         return profile
+

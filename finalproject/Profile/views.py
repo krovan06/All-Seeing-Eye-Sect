@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserForm, UserRegistrationForm, RequestForm, ProfileEditForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views import View
 from django.contrib.admin.views.decorators import staff_member_required
@@ -210,3 +211,11 @@ def user_profile(request, id):
         form = UserForm(instance=user)
 
     return render(request, 'Profile/user_lk.html', {'form': form, 'user': user})
+
+class DeleteAccountView(LoginRequiredMixin, View):
+    def post(self, request):
+        user = request.user
+        user.delete()  # Удаляет объект пользователя
+        logout(request)  # Завершает сессию
+        return redirect('login')
+
