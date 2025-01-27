@@ -166,7 +166,7 @@ class CustomLoginView(View):
 
 def news_feed(request):
 
-    BANNED_WORDS = ["пизда", "хуй", "anotherbadword", "арбуз"]
+    BANNED_WORDS = ["негр", "кровь", "fuck", "арбуз"]
 
     def censor_text(comment):
         for word in BANNED_WORDS:

@@ -1,10 +1,74 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<h2>{{ post.title }}</h2>
-{% if post.file %}
-    <img src="{{ post.file.url }}" alt="{{ post.title }}">
-{% endif %}
-<p>{{ post.body }}</p>
-<p><small>Опубликовано: {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
-{% endblock %}
+    <!-- Подключение шрифтов и стилей -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'Profile/css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+    <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    <canvas id="particlesCanvas"></canvas>
+
+    <header>
+        <div class="main-header-container">
+            <div class="content-container">
+                <a href="" class="logo">KROVAN|website</a>
+                <input type="checkbox" id="check">
+                <label for="check" class="icons">
+                    <i class="bx bx-menu" id="menu-icon"></i>
+                    <i class="bx bx-x" id="close-icon"></i>
+                </label>
+                <nav class="header-content navbar">
+                    <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+                    <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">{{ user.username|upper }}</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content-container">
+        <div class="post-container">
+            <h1 class="post-title">{{ post.title }}</h1>
+            {% if post.file %}
+                <div class="news-image" style="background-image: url({{ post.file.url }}); background-size: cover;"></div>
+            {% endif %}
+            <p class="post-body">{{ post.body }}</p>
+            {% for comment in req.comments.all %}
+              <div class="comment">
+                  {% if comment.user %}
+                      <p><strong>{{ comment.user.username }}</strong>:</p>
+                      <p>{{ comment.body }}</p>
+                  {% else %}
+                      <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
+                  {% endif %}
+                  <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+              </div>
+            {% empty %}
+              <p>Нет комментариев.</p>
+            {% endfor %}
+            <p class="post-date"><small>Опубликовано: {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
+        </div>
+    </div>
+
+
+
+    <script src="{% static 'Profile/js/aplication.js' %}"></script>
+</body>
+</html>
