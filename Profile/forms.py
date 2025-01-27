@@ -9,7 +9,7 @@ class CommentForm(forms.ModelForm):
         fields = ['body']
         widgets = {
             'body': forms.Textarea(attrs={  # Изменили TextInput на Textarea
-                'placeholder': "Пиши тварь",
+                'placeholder': "коментарий..",
                 'rows': 3,
                 'class': 'comment-field'
             }),
