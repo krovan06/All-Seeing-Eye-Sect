@@ -123,6 +123,19 @@ main {
   justify-content: center;
 }
 
+.news-item {
+    weight: 100%;
+}
+
+.news-image {
+    background-size: cover;
+    background-position: center;
+}
+
+.news-feed {
+    width: 80%;
+}
+
 .test-block {
   width: 800px;
   height: 916px;
@@ -158,8 +171,8 @@ main {
 }
 
 .news-image {
-  max-weight: 500px;
-  min-height: 500px;
+  weight: 100%;
+  height: 500px;
   border-radius: 10px;
   overflow: hidden; /* Скрываем излишки */
 }

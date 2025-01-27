@@ -26,9 +26,13 @@
         <i class="bx bx-x" id="close-icon"></i>
       </label>
       <nav class="header-content navbar">
-        <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
-                  {{ user.username|upper }}
-              </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
+                {{ user.username|upper }}
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
+        {% endif %}
       </nav>
     </div>
   </div>
@@ -48,7 +52,7 @@
         <div class="news-item animated-block">
           <h2 class="news-text">{{ req.title }}</h2>
             {% if req.file %}
-            <div class="news-image" style="background-image: url({{ req.file.url }}); background-size: cover;"></div>
+            <div class="news-image" style="background-image: url({{ req.file.url }});"></div>
             {% endif %}
           <p class="news-text">{{ req.body }}</p>
           <hr>
