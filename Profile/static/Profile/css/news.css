@@ -157,6 +157,13 @@ main {
   height: 50%;
 }
 
+.news-image {
+  max-weight: 500px;
+  min-height: 500px;
+  border-radius: 10px;
+  overflow: hidden; /* Скрываем излишки */
+}
+
 .test-text {
   display: flex;
   align-items: center;

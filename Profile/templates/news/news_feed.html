@@ -1,54 +1,96 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<h2>Лента новостей</h2>
+  <link rel="stylesheet" href="{% static 'Profile/css/news.css' %}">
+  <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+  <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
 
-<div class="news-feed">
-    {% for req in approved_requests %}
-    <div class="news-item">
-        {% if req.file %}
-        <img src="{{ req.file.url }}" alt="{{ req.title }}" class="news-image">
-        {% endif %}
-        <h3>{{ req.title }}</h3>
-        <p>{{ req.body }}</p>
-        <hr>
-
-        <h2>Комментарии</h2>
-        <!-- Используем req.comments.all() вместо отдельной переменной -->
-       {% for comment in req.comments.all %}
-        <div class="comment">
-            <!-- Проверка существования пользователя -->
-            {% if comment.user %}
-                <p><strong>{{ comment.user.username }}</strong>:</p>
-                <p>{{ comment.body }}</p>
-            {% else %}
-                <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
-            {% endif %}
-            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
-        </div>
-    {% empty %}
-        <p>Нет комментариев.</p>
-    {% endfor %}
-
-        <hr>
-        <!-- Форма комментария -->
-        {% if user.is_authenticated %}
-            <h3>Оставить комментарий</h3>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="request_id" value="{{ req.id }}">
-                {{ form.as_p }}
-                <button type="submit">Отправить</button>
-            </form>
-        {% else %}
-            <p>Чтобы оставить комментарий, <a href="{% url 'login' %}">войдите</a>.</p>
-        {% endif %}
-
-        <p><small>Опубликовано: {{ req.created_at|date:"d.m.Y H:i" }}</small></p>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <title>Лента новостей</title>
+</head>
+<body>
+<canvas id="particlesCanvas"></canvas>
+<header>
+  <div class="main-header-container">
+    <div class="content-container">
+      <a href="" class="logo">KROVAN|website</a>
+      <input type="checkbox" id="check">
+      <label for="check" class="icons">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <i class="bx bx-x" id="close-icon"></i>
+      </label>
+      <nav class="header-content navbar">
+        <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
+                  {{ user.username|upper }}
+              </a>
+      </nav>
     </div>
-    <hr>
-    {% empty %}
-    <p>Пока нет новостей.</p>
-    {% endfor %}
-</div>
-{% endblock %}
+  </div>
+</header>
+
+<article>
+  <div class="hello-word">
+    <h1 class="NEWS">Лента новостей</h1>
+  </div>
+</article>
+
+<main>
+  <div class="news-main-container">
+    <div class="news-main-content">
+      <div class="news-feed">
+        {% for req in approved_requests %}
+        <div class="news-item animated-block">
+          <h2 class="news-text">{{ req.title }}</h2>
+            {% if req.file %}
+            <div class="news-image" style="background-image: url({{ req.file.url }}); background-size: cover;"></div>
+            {% endif %}
+          <p class="news-text">{{ req.body }}</p>
+          <hr>
+
+          <h2>Комментарии</h2>
+          {% for comment in req.comments.all %}
+          <div class="comment">
+              {% if comment.user %}
+                  <p><strong>{{ comment.user.username }}</strong>:</p>
+                  <p>{{ comment.body }}</p>
+              {% else %}
+                  <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
+              {% endif %}
+              <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+          </div>
+          {% empty %}
+              <p>Нет комментариев.</p>
+          {% endfor %}
+
+          <hr>
+          {% if user.is_authenticated %}
+              <h3>Оставить комментарий</h3>
+              <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="request_id" value="{{ req.id }}">
+                  {{ form.as_p }}
+                  <button type="submit" class="comment-button">Отправить</button>
+              </form>
+          {% else %}
+              <p>Чтобы оставить комментарий, <a href="{% url 'login' %}">войдите</a>.</p>
+          {% endif %}
+
+          <p><small>Опубликовано: {{ req.created_at|date:"d.m.Y H:i" }}</small></p>
+        </div>
+        <hr>
+        {% empty %}
+        <p>Пока нет новостей.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+<script src="{% static 'Profile/js/news.js' %}"></script>
+</body>
+</html>

@@ -44,7 +44,7 @@ class RequestForm(forms.ModelForm):
 
 class ProfileEditForm(forms.ModelForm):
     username = forms.CharField(max_length=150, label="Никнейм", required=True)
-    email = forms.EmailField(label="Электронная почта", required=True)
+    # email = forms.EmailField(label="Электронная почта", required=True)
     keep_avatar = forms.BooleanField(label="Оставить текущий аватар", required=False)
 
     class Meta:
@@ -56,7 +56,7 @@ class ProfileEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if user:
             self.fields['username'].initial = user.username
-            self.fields['email'].initial = user.email
+            # self.fields['email'].initial = user.email
 
     def save(self, commit=True):
         profile = super().save(commit=False)
@@ -64,7 +64,7 @@ class ProfileEditForm(forms.ModelForm):
 
         # Сохраняем никнейм и почту
         user.username = self.cleaned_data['username']
-        user.email = self.cleaned_data['email']
+        # user.email = self.cleaned_data['email']
 
         # Если выбран чекбокс "Оставить текущий аватар", сбрасываем новое значение для аватара
         if self.cleaned_data.get('keep_avatar'):
