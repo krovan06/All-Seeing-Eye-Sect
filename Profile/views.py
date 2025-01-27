@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .forms import UserForm, UserRegistrationForm, RequestForm, ProfileEditForm
+from .forms import *
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
@@ -10,13 +10,18 @@ from django.db.models import Q
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAdminUser
-from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import RecoveryToken
-from django.contrib.auth.models import User
 from django.urls import reverse
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.views.generic import ListView
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -160,9 +165,56 @@ class CustomLoginView(View):
         return render(request, 'registration/login.html', {'form': form})
 
 def news_feed(request):
-    # Получение только одобренных заявок
+
+    BANNED_WORDS = ["пизда", "хуй", "anotherbadword"]
+
+    def censor_text(comment):
+        for word in BANNED_WORDS:
+            comment = comment.replace(word, "&!%*!")  # Или "*" * len(word) для звездочек
+        return comment
+
+
     approved_requests = Request.objects.filter(status='approved').order_by('-created_at')
-    return render(request, 'news/news_feed.html', {'approved_requests': approved_requests})
+    form = CommentForm()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            request_id = request.POST.get('request_id')
+            try:
+                req = Request.objects.get(id=request_id)
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.post = req
+                comment.body = censor_text(comment.body)  # Цензура перед сохранением
+                comment.save()
+                return redirect('news_feed')
+            except Request.DoesNotExist:
+                pass
+
+    return render(request, 'news/news_feed.html', {
+        'approved_requests': approved_requests,
+        'form': form,
+    })
+
+
+def post_detail(request, slug):
+    post = get_object_or_404(Request, slug=slug)
+    return render(request, 'requests/post_detail.html', {
+        'post': post,
+    })
+
+def UserCommentsView (request):
+    comments = Comment.objects.filter(user=request.user).select_related('post').order_by('-created_at')
+
+    # Передаем комментарии в шаблон
+    return render(request, 'comments/my_comments.html', {
+        'comments': comments
+    })
+
+
+def home_page(request):
+    return render(request, 'start-page/home.html')
 
 #ПОЛЬЗОВАТЕЛИ
 class UserListCreateView(generics.ListCreateAPIView):
@@ -275,3 +327,56 @@ def recover_account(request, token):
         messages.error(request, 'Неверный или недействительный токен.')
         return redirect('send_recovery_email')
 
+#ПАРОЛИ
+def password_reset(request):
+    user_email = request.user.email
+    user = User.objects.get(email=user_email)
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+    reset_link = request.build_absolute_uri(f'/password-reset-confirm/{uid}/{token}/')
+
+    send_mail(
+        'Сборс параля',
+        f'Нажмите на ссылку для сброса вашего параля:{reset_link}',
+        'krovan83@mail.ru',
+        [user_email],
+    )
+    return render(request, 'registration/password_reset.html')
+
+
+def password_reset_confirm(request, uidb64, token):
+    try:
+        # Раскодирование UID
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    # Проверка токена
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            # Получение нового пароля
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if new_password and new_password == confirm_password:
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, 'Ваш пароль успешно изменён.')
+
+                # Логин пользователя после смены пароля
+                login(request, user)
+                return redirect('login')
+            else:
+                messages.error(request, 'Пароли не совпадают или пусты.')
+
+        # Рендер формы для смены пароля
+        return render(request, 'registration/PasswordResetConfirm.html', {
+            'validlink': True,
+        })
+    else:
+        # Недействительная ссылка
+        return render(request, 'registration/PasswordResetConfirm.html', {
+            'validlink': False,
+        })

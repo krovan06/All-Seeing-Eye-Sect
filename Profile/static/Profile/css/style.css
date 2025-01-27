@@ -1,11 +1,47 @@
 html {
   scroll-behavior: smooth;
 }
+#close-icon {
+  display: none;
+}
+:root {
+  --index: 1vh + 1vw;
+}
 
-.main-text {
-  font-family: Amatic SC;
+/* Если меню открыто (чекбокс активен), меняем иконки */
+#check:checked ~ .icons #menu-icon {
+  display: none;
+}
+#check:checked ~ .icons #close-icon {
+  display: block;
+}
+#check {
+  display: none;
+}
+.icons {
+  display: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+}
+.navbar a {
+  text-align: center;
+  padding: 1rem;
+  font-size: 2rem;
+  color: white;
+  text-decoration: none;
+}
+
+/* Применение шрифта ко всем элементам */
+body {
+  font-family: 'Handjet', serif;
+  font-style: normal;
+  font-variation-settings:
+          "ELGR" 1,
+          "ELSH" 5.2;
   color: whitesmoke;
-  font-size: 50px;
+  margin: 0;
+  padding: 0;
 }
 
 /*ШАПКА*/
@@ -13,17 +49,13 @@ html {
   position: relative;
   width: 100%;
   height: 8vh;
-
   backdrop-filter: blur(2px);
   background: rgba(102, 102, 102, 0.16);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 1;
 }
-
 .content-container {
   position: relative;
   width: 90%;
@@ -31,67 +63,52 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
   z-index: 2;
 }
-
 .header-content {
   display: flex;
   justify-content: space-between;
   gap: 80px;
 }
-
-.logo {
+.logo, .header-text {
   text-decoration: none;
   color: rgb(255, 255, 255);
-  font-family: Chelsea Market;
-  font-size: 30px;
+  font-size: 2rem;
   transition: 0.5s;
 }
-
 .header-text {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
-  font-family: Amatic SC;
-  font-size: 35px;
+  font-size: 2rem;
   transition: 0.3s;
 }
-
+.news:hover, .games:hover, .more:hover, .brotherhood:hover {
+  font-size: calc(var(--index) * .95);
+  transition: font-size 0.3s ease, color 0.3s ease;
+}
 .news:hover {
   color: rgb(123, 102, 40);
-  font-size: 37px;
 }
-
 .games:hover {
   color: rgb(40, 59, 123);
-  font-size: 37px;
 }
-
 .more:hover {
   color: rgb(55, 40, 123);
-  font-size: 37px;
 }
-
 .brotherhood:hover {
   color: rgb(123, 40, 40);
-  font-size: 37px;
 }
-
 .logo:hover {
   color: rgb(123, 40, 40);
   cursor: pointer;
 }
-/*ГЛАЗ*/
 
+/*ГЛАЗ*/
 .eye-container {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 700px;
   height: 100%;
 }
-
 .eye {
   width: 300px;
   height: 150px;
@@ -101,7 +118,6 @@ html {
   background-color: black;
   overflow: hidden;
 }
-
 .iris {
   width: 100px;
   height: 100px;
@@ -113,7 +129,10 @@ html {
   transform: translate(-50%, -50%);
   overflow: hidden;
 }
-
+.dialogue-text1, .dialogue-text2 {
+  font-weight: bold;
+  font-size: 50px;
+}
 .pupil {
   width: 40px;
   height: 40px;
@@ -124,12 +143,10 @@ html {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .main-eye {
   margin-top: 100px;
   width: 100%;
   height: 50vh;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,105 +158,165 @@ html {
   align-items: center;
   justify-content: center;
 }
-
 .dialogue-text1 {
   position: relative;
   z-index: 2;
 }
-
 .dialogue-text2 {
   position: absolute;
   z-index: 3;
 }
 
-
 /*ТАИНСТВЕННАЯ ЧАСТЬ*/
-
 .text-container {
   position: relative;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 80%;
-  height: 60%;
+  height: 50%;
 }
-
 .text1, .text2 {
-  font-size: 2rem;
+  font-size: 5vh;
   color: #fff;
   text-align: center;
-  font-family: Amatic SC;
   transition: opacity 1.5s ease;
 }
-
 .text1 {
   position: relative;
   filter: blur(0.5px);
 }
-
 .text2 {
   position: absolute;
   opacity: 0;
   transform: scale(0.9);
 }
-
 .btm-fog {
   cursor: pointer;
   position: relative;
   color: #fff;
   font-size: 40px;
-  font-family: Amatic SC;
-
   margin-left: 10px;
-
   z-index: 3;
 }
-
 article {
   width: 100%;
   height: 100vh;
-
-
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 /*ПОДВАЛ*/
-
 .interesting {
-  height: 80px;
+  height: 60px;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/*ШРИФТ*/
-
-.chelsea-market-regular {
-  font-family: "Chelsea Market", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.amatic-sc-regular {
-  font-family: "Amatic SC", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
 /*АНИМАЦИЯ*/
-
 .animate__fadeInUp {
   animation-delay: 3s;
 }
-
 .animate__fadeOutUp {
   animation-delay: 3s;
 }
 
-/* ЭКСПЕРЕМЕНТ */
+/* Медиазапросы */
+@media (max-width: 460px) {
+  .dialogue-text1, .dialogue-text2 {
+    font-size: 30px !important;
+  }
+  .text1, .text2 {
+    font-size: 2.2vh !important;
+  }
+}
+@media (max-width: 400px) {
+  .text1, .text2 {
+    font-size: 2.1vh !important;
+  }
+  .btm-fog {
+    font-size: 2.1vh !important;
+  }
+  .logo {
+    font-size: 3vh !important;
+  }
+}
+@media (max-width: 1305px) {
+  .text1, .text2 {
+    font-size: 3.3vh !important;
+  }
+}
+@media (max-width: 640px) {
+  .text1, .text2 {
+    font-size: 3vh !important;
+  }
+  .btm-fog {
+    font-size: 3vh !important;
+  }
+  .logo {
+    font-size: 3.5vh !important;
+  }
+}
+@media (max-width: 470px) {
+  .text1, .text2 {
+    font-size: 2.7vh !important;
+  }
+  .btm-fog {
+    font-size: 2.7vh !important;
+  }
+  .logo {
+    font-size: 3.5vh !important;
+  }
+}
+@media (max-width: 1182px) {
+  .navbar {
+    position: absolute;
+    top: 8vh;
+    left: 0;
+    width: 100%;
+    height: 0;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    transition: height 0.3s ease, padding 0.3s ease;
+  }
+  .icons {
+    display: inline-flex;
+  }
+  #check:checked ~ .icons #menu-icon {
+    display: none;
+  }
+  #check:checked ~ .icons #close-icon {
+    display: block;
+  }
+  #check:checked ~ .navbar {
+    height: auto;
+    padding: 1rem;
+  }
+  .navbar a {
+    text-align: center;
+    padding: 0.2rem;
+    font-size: 1.6rem;
+    color: white;
+    text-decoration: none;
+  }
+}
+@media (min-width: 1182px) {
+  .navbar {
+    flex-direction: row;
+    height: auto;
+    background: none;
+    position: static;
+  }
+  .navbar a {
+    font-size: calc(var(--index) * .85);
+    color: #fff;
+    padding: 0 0.5rem;
+  }
+  .icons {
+    display: none;
+  }
+}

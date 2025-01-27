@@ -7,24 +7,18 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
+    path('', home_page, name='home_page'),  # Стартовый URL
     path('user/id/<int:id>/', user_profile, name='user_profile'),
-
     path('register/', register, name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
-
-    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('password-reset/', password_reset, name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
     path('recovery/', send_recovery_email, name='send_recovery_email'),
     path('recovery/<uuid:token>/', recover_account, name='recover_account'),
-
-    path('', redirect_to_profile, name='redirect_to_profile'),
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user-detail'),
-
     path('requests/', request_list, name='request_list'),
     path('requests/create/', create_request, name='create_request'),
     path('requests/manage/', manage_requests, name='manage_requests'),
@@ -36,6 +30,8 @@ urlpatterns = [
     path('requests/<int:id>/', view_request_detail, name='view_request_detail'),
     path('requests/<int:id>/edit/', edit_request, name='edit_request'),
     path('requests/<int:request_id>/user-delete/', delete_request_by_user, name='delete_request_by_user'),
-
+    path('request/<slug:slug>/', views.post_detail, name='post_detail'),
+    path('my-comments/', UserCommentsView, name='user_comments'),
     path('news/', news_feed, name='news_feed'),
+    path('home/', home_page, name='home_page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

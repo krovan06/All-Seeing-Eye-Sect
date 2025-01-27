@@ -28,6 +28,7 @@
                 <td>{{ req.created_at }}</td>
                 <td>
                     {% if req.status == 'pending' %}
+                        <a href="{% url 'view_request_detail' req.id %}" class="btn btn-info btn-sm">Содержимое</a>
                         <a href="{% url 'update_request_status' req.id 'approved' %}" class="btn btn-success btn-sm">Одобрить</a>
                         <a href="{% url 'update_request_status' req.id 'rejected' %}" class="btn btn-danger btn-sm">Отклонить</a>
                     {% endif %}

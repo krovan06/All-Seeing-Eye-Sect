@@ -1,7 +1,21 @@
 ::placeholder {
-  transform: translatex(5%);
+  font-family: 'Handjet', serif;
 }
 
+.log-line, .pass-line, .optional-mail, .optional-number {
+  padding-left: 2vh;
+  font-family: 'Handjet', serif;
+}
+body {
+  font-family: 'Handjet', serif;
+  font-style: normal;
+  font-variation-settings:
+          "ELGR" 1,
+          "ELSH" 5.2;
+  color: whitesmoke;
+  margin: 0;
+  padding: 0;
+}
 /**/
 .eye-container {
   margin-top: 5%;
@@ -48,7 +62,6 @@
 /**/
 
 .logreg-question {
-  font-family: Amatic SC;
   color: aliceblue;
 }
 
@@ -65,7 +78,7 @@
 .logreg-block {
   width: 400px;
   height: 100%;
-  
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,8 +99,10 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
+
+  animation-name: warning;
+  animation-duration: 0.5s;
 }
 
 .pass-line {
@@ -99,7 +114,6 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
 }
 
@@ -108,7 +122,7 @@
 }
 .password-control {
 	position: absolute;
-	
+
   bottom: 22vh;
   left: 15.5vw;
 
@@ -147,7 +161,6 @@
   background: rgba(255, 255, 255, 0.552);
 
   color: rgb(0, 0, 0);
-  font-family: Amatic SC;
   font-size: 25px;
 
   transition: 0.4s;
@@ -161,7 +174,6 @@
 .reg-link {
   text-decoration: none;
   color: rgb(255, 255, 255);
-  font-family: Amatic SC;
   font-size: 25px;
   transition: 0.3s;
 }
@@ -170,26 +182,8 @@
   color: rgb(123, 40, 40);
 }
 
-.forgot-password-link {
-    display: block;
-    margin-top: 10px;
-    color: #fff;
-    text-align: center;
-    text-decoration: underline;
-    font-size: 14px;
-}
-
-.forgot-password-link:hover {
-    color: #ffd700;
-}
-
 /*ШРИФТЫ*/
 
-.amatic-sc-regular {
-  font-family: "Amatic SC", serif;
-  font-weight: 400;
-  font-style: normal;
-}
 
 /*АНИМАЦИИ*/
 

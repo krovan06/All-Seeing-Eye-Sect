@@ -1,42 +1,76 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мои заявки</title>
+  <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+<canvas id="particlesCanvas"></canvas>
+<header>
+  <div class="main-header-container">
+    <div class="content-container">
+      <a href="" class="logo">KROVAN|website</a>
+      <input type="checkbox" id="check">
+      <label for="check" class="icons">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <i class="bx bx-x" id="close-icon"></i>
+      </label>
+      <nav class="header-content navbar">
+        <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+        <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood"> {{ user.username|upper }} </a>
+      </nav>
+    </div>
+  </div>
+</header>
 
-{% block content %}
-<h2>Мои заявки</h2>
+<h1>Мои заявки</h1>
 
-<table class="table table-striped">
+<div class="table-container">
+  <table>
     <thead>
-        <tr>
-            <th>Заголовок</th>
-            <th>Дата создания</th>
-            <th>Статус</th>
-            <th>Действия</th>
-        </tr>
+      <tr>
+        <th>Заголовок</th>
+        <th>Дата создания</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
     </thead>
     <tbody>
+      {% if user_requests %}
         {% for req in user_requests %}
         <tr>
-            <td>{{ req.title }}</td>
-            <td>{{ req.created_at|date:"d.m.Y H:i" }}</td>
-            <td>
-                {% if req.status == 'pending' %}
-                    На рассмотрении
-                {% elif req.status == 'approved' %}
-                    Одобрено
-                {% elif req.status == 'rejected' %}
-                    Отклонено
-                {% endif %}
-            </td>
-            <td>
-                <a href="{% url 'view_request_detail' req.id %}" class="btn btn-info btn-sm">Подробнее</a>
-                <a href="{% url 'edit_request' req.id %}" class="btn btn-warning btn-sm">Редактировать</a>
-                <a href="{% url 'delete_request_by_user' req.id %}" class="btn btn-danger btn-sm">Удалить</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4" class="text-center">Вы еще не отправили ни одной заявки.</td>
+          <td data-label="Заголовок">{{ req.title }}</td>
+          <td data-label="Дата создания">{{ req.created_at|date:"d.m.Y H:i" }}</td>
+          <td data-label="Статус">
+            {% if req.status == 'pending' %}
+              На рассмотрении
+            {% elif req.status == 'approved' %}
+              Одобрено
+            {% elif req.status == 'rejected' %}
+              Отклонено
+            {% endif %}
+          </td>
+          <td data-label="Действия" class="actions">
+              <button> <a href="{% url 'edit_request' req.id %}"  class="btn-link" >Редактировать</a></button>
+              <button class="delete"><a href="{% url 'delete_request_by_user' req.id %}" class="btn-link">Удалить</a></button>
+          </td>
         </tr>
         {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="4" class="text-center">Вы еще не отправили ни одной заявки.</td>
+        </tr>
+      {% endif %}
     </tbody>
-</table>
-{% endblock %}
+  </table>
+</div>
+<script src="{% static 'Profile/js/profile.js' %}"></script>
+</body>
+</html>

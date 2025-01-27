@@ -2,78 +2,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Play:wght@400;700&family=Press+Start+2P&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
 
-    <!-- jQuery and Inputmask -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/jquery.inputmask.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/colormask.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/jquery.inputmask.min.js"></script>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'Profile/css/star.css' %}">
-    <link rel="stylesheet" href="{% static 'Profile/css/reg.css' %}">
+  <link rel="stylesheet" href="{% static 'Profile/css/star.css' %}">
+  <link rel="stylesheet" href="{% static 'Profile/css/reg.css' %}">
+  <title>Регистрация</title>
 
-    <title>Регистрация</title>
+  <style>
+    .error-message {
+      color: #ff4444;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    .error-field {
+      border: 2px solid #ff0000 !important;
+      animation: error-pulse 0.8s infinite;
+    }
+    @keyframes error-pulse {
+      0% { border-color: #ff0000; }
+      50% { border-color: #ff6666; }
+      100% { border-color: #ff0000; }
+    }
+  </style>
 </head>
 <body>
-    <div id="stars"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
+  <div id="stars"></div>
+  <div id="stars2"></div>
+  <div id="stars3"></div>
 
-    <div class="eye-container">
-        <div class="eye">
-            <div class="iris">
-                <div class="pupil"></div>
-            </div>
+  <div class="eye-container">
+    <div class="eye">
+      <div class="iris">
+        <div class="pupil"></div>
+      </div>
+    </div>
+  </div>
+
+  <form method="POST" action="{% url 'register' %}" class="main-reg-container">
+    {% csrf_token %}
+    <div class="logreg-block">
+      <h1 class="logreg-question">Меня зовут \@!&7%06, а вас?</h1>
+
+      <!-- Вывод общих ошибок -->
+      {% if form.non_field_errors %}
+        <div class="error-message">
+          {{ form.non_field_errors }}
         </div>
+      {% endif %}
+
+      <!-- Поле логина -->
+      <input type="text"
+             class="log-line {% if form.username.errors %}error-field{% endif %}"
+             name="username"
+             placeholder="Логин"
+             value="{{ form.username.value|default:'' }}">
+      {% if form.username.errors %}
+        <div class="error-message">{{ form.username.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Поле пароля -->
+      <input type="password"
+             class="pass-line {% if form.password1.errors %}error-field{% endif %}"
+             name="password1"
+             placeholder="Пароль">
+      {% if form.password1.errors %}
+        <div class="error-message">{{ form.password1.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Подтверждение пароля -->
+      <input type="password"
+             class="pass-line {% if form.password2.errors %}error-field{% endif %}"
+             name="password2"
+             placeholder="Повторите пароль">
+      {% if form.password2.errors %}
+        <div class="error-message">{{ form.password2.errors.0 }}</div>
+      {% endif %}
+
+      <!-- Поле email -->
+      <input type="email"
+             class="pass-line {% if form.email.errors %}error-field{% endif %}"
+             name="email"
+             placeholder="Ваша почта"
+             value="{{ form.email.value|default:'' }}">
+      {% if form.email.errors %}
+        <div class="error-message">{{ form.email.errors.0 }}</div>
+      {% endif %}
+
+
+      <div class="agreement-block">
+        <input type="checkbox"
+               name="agreement"
+               id="agreement"
+               {% if form.agreement.value %}checked{% endif %}>
+
+        <label for="agreement">Принимаю <a href="#">пользовательское соглашение</a></label>
+
+        <label for="agreement">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></label>
+
+        {% if form.agreement.errors %}
+          <div class="error-message">{{ form.agreement.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="logreg-btn">
+        <button type="submit" class="log-btn">ПОДТВЕРДИТЬ</button>
+      </div>
     </div>
+  </form>
 
-    <div class="main-reg-container">
-        <form method="POST">
-            <div class="logreg-block">
-                <h1 class="logreg-question">Меня зовут \@!&7%06, а вас?</h1>
-                {% csrf_token %}
-                <!-- Поле для ввода имени пользователя -->
-                <label for="id_username" class="input-label">Ваш логин</label>
-                <input type="text" name="username" id="id_username" class="log-line" placeholder="Введите логин">
-
-                <!-- Поле для ввода пароля -->
-                <label for="id_password1" class="input-label">Пароль</label>
-                <input type="password" name="password1" id="id_password1" class="pass-line" placeholder="Введите пароль">
-
-                <!-- Поле для повторного ввода пароля -->
-                <label for="id_password2" class="input-label">Повторите пароль</label>
-                <input type="password" name="password2" id="id_password2" class="pass-line" placeholder="Повторите пароль">
-
-                <div class="optional">
-                    <p class="optional-text">Эти данные потребуются для полного функционала аккаунта. Вы сможете ввести их в личном кабинете.</p>
-                    <label type="email">Ваша почта:</label>
-                    <input type="email" name="email" class="optional-mail" placeholder="ваша почта">
-                    <label for="phone">Номер телефона:</label>
-                    <input type="tel" id="phone" name="phone" class="optional-number" placeholder="+7 (___) ___-__-__" maxlength="18">
-                </div>
-
-                <div class="agreement-block">
-                    <input type="checkbox" required>
-                    <a href="#">Пользовательское соглашение</a>
-                </div>
-                <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
-
-                <div class="logreg-btn">
-                    <button type="submit" class="log-btn">ПОДТВЕРДИТЬ</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <script src="{% static 'Profile/js/star.js' %}"></script>
-    <script src="{% static 'Profile/js/reg.js' %}"></script>
+  <script src="{% static 'Profile/js/star.js' %}"></script>
+  <script>
+    // Инициализация маски для телефона
+    $(document).ready(function(){
+      $('#phone').inputmask({
+        mask: "+7 (999) 999-99-99",
+        placeholder: "_",
+        showMaskOnHover: false
+      });
+    });
+  </script>
 </body>
 </html>

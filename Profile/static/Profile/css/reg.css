@@ -1,4 +1,7 @@
-/**/
+::placeholder {
+  font-family: 'Handjet', serif;
+}
+
 .eye-container {
   margin-top: 5%;
   width: 100%;
@@ -6,6 +9,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.log-line, .pass-line, .optional-mail, .optional-number {
+  padding-left: 2vh;
+  font-family: 'Handjet', serif;
 }
 
 .eye {
@@ -44,7 +52,6 @@
 /**/
 
 .logreg-question {
-  font-family: Amatic SC;
   color: aliceblue;
 }
 
@@ -61,7 +68,7 @@
 .logreg-block {
   width: 400px;
   height: 100%;
-  
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,7 +89,6 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
 }
 
@@ -95,7 +101,6 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
 }
 
@@ -125,7 +130,6 @@
   background: rgba(255, 255, 255, 0.552);
 
   color: rgb(0, 0, 0);
-  font-family: Amatic SC;
   font-size: 25px;
 
   transition: 0.4s;
@@ -139,7 +143,6 @@
 .reg-link {
   text-decoration: none;
   color: rgb(255, 255, 255);
-  font-family: Amatic SC;
   font-size: 25px;
   transition: 0.3s;
 }
@@ -171,7 +174,6 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
 }
 
@@ -184,14 +186,25 @@
   background: rgba(0, 0, 0, 0.71);
 
   color: aliceblue;
-  font-family: Amatic SC;
   font-size: 25px;
+}
+
+.agreement-window {
+  display: none;
+  width: 50px;
+  height: 50px;
+  background-color: aliceblue;
 }
 
 /*ШРИФТЫ*/
 
-.amatic-sc-regular {
-  font-family: "Amatic SC", serif;
-  font-weight: 400;
+body {
+  font-family: 'Handjet', serif;
   font-style: normal;
+  font-variation-settings:
+          "ELGR" 1,
+          "ELSH" 5.2;
+  color: whitesmoke;
+  margin: 0;
+  padding: 0;
 }

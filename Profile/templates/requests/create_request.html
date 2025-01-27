@@ -1,12 +1,68 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<div class="container mt-4">
-    <h2>Создать заявку</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <title>ЗАяВки</title>
+</head>
+<body>
+  <canvas id="particlesCanvas"></canvas>
+
+  <header>
+    <div class="main-header-container">
+      <div class="content-container">
+        <a href="" class="logo">KROVAN|website</a>
+        <input type="checkbox" id="check">
+        <label for="check" class="icons">
+          <i class="bx bx-menu" id="menu-icon"></i>
+          <i class="bx bx-x" id="close-icon"></i>
+        </label>
+        <nav class="header-content navbar">
+          <a href="news.html" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+          <!--<a href="games.html" class="header-text games">АРХИВ ИГРОВОЙ ВСЕЛЕННОЙ</a>-->
+          <!--<a href="#interesting" class="header-text more">УЗНАТЬ БОЛЬШЕ</a>-->
+          <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
+                  {{ user.username|upper }}
+              </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <article>
+    <form method="post" enctype="multipart/form-data" class="aplication-form">
+      <div class="main-content-container">
+        <div class="aplication-container">
+              {% csrf_token %}
+              <textarea name="title" class="aplication-name" placeholder="Введите заголовок заявки..." required>{{ form.title.value }}</textarea>
+              <textarea name="body" class="aplication-main-content" placeholder="Введите содержание..." required>{{ form.body.value }}</textarea>
+              <div class="aplication-img">
+                <div class="img-content">
+                  <span class="img-placeholder">Импорт изображения</span>
+                  <label class="upload-button">
+                    <input type="file" name="file" accept="image/*" class="file-input" onchange="previewImage(event)" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="clip-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6" />
+                    </svg>
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="go-btn">Отправить заявку</button>
+          </div>
+      </div>
     </form>
-</div>
-{% endblock %}
+  </article>
+
+  <script src="{% static 'Profile/js/aplication.js' %}"></script>
+</body>
+</html>

@@ -8,6 +8,7 @@ import uuid
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
+from django.utils.text import slugify
 
 class Request(models.Model):
     STATUS_CHOICES = [
@@ -26,12 +27,36 @@ class Request(models.Model):
         validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'gif'])],
         verbose_name='Изображение'
     )
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True, verbose_name='Slug')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', verbose_name='Статус')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            while Request.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{uuid.uuid4().hex[:8]}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.title}"
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Request,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,  # Изменяем CASCADE на SET_NULL
+        null=True,                  # Разрешаем NULL
+        blank=True,
+        related_name='comments'
+    )
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class AccountRecoveryToken(models.Model):
@@ -83,3 +108,4 @@ class RecoveryToken(models.Model):
 
     def is_valid(self):
         return now() < self.created_at + timedelta(hours=24)
+

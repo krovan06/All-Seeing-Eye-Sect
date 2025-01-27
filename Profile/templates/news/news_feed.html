@@ -4,14 +4,47 @@
 <h2>Лента новостей</h2>
 
 <div class="news-feed">
-    {% for request in approved_requests %}
+    {% for req in approved_requests %}
     <div class="news-item">
-        {% if request.file %}
-        <img src="{{ request.file.url }}" alt="{{ request.title }}" class="news-image">
+        {% if req.file %}
+        <img src="{{ req.file.url }}" alt="{{ req.title }}" class="news-image">
         {% endif %}
-        <h3>{{ request.title }}</h3>
-        <p>{{ request.body }}</p> <!-- Добавлено отображение основного текста -->
-        <p><small>Опубликовано: {{ request.created_at|date:"d.m.Y H:i" }}</small></p>
+        <h3>{{ req.title }}</h3>
+        <p>{{ req.body }}</p>
+        <hr>
+
+        <h2>Комментарии</h2>
+        <!-- Используем req.comments.all() вместо отдельной переменной -->
+       {% for comment in req.comments.all %}
+        <div class="comment">
+            <!-- Проверка существования пользователя -->
+            {% if comment.user %}
+                <p><strong>{{ comment.user.username }}</strong>:</p>
+                <p>{{ comment.body }}</p>
+            {% else %}
+                <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
+            {% endif %}
+            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+        </div>
+    {% empty %}
+        <p>Нет комментариев.</p>
+    {% endfor %}
+
+        <hr>
+        <!-- Форма комментария -->
+        {% if user.is_authenticated %}
+            <h3>Оставить комментарий</h3>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="request_id" value="{{ req.id }}">
+                {{ form.as_p }}
+                <button type="submit">Отправить</button>
+            </form>
+        {% else %}
+            <p>Чтобы оставить комментарий, <a href="{% url 'login' %}">войдите</a>.</p>
+        {% endif %}
+
+        <p><small>Опубликовано: {{ req.created_at|date:"d.m.Y H:i" }}</small></p>
     </div>
     <hr>
     {% empty %}

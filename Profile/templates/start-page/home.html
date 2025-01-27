@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+
+  <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'Profile/css/star.css' %}">
+  <link rel="stylesheet" href="{% static 'Profile/css/style.css' %}">
+</head>
+<body>
+  <div id="stars"></div>
+  <div id="stars2"></div>
+  <div id="stars3"></div>
+
+  <header>
+    <div class="main-header-container">
+      <div class="content-container">
+        <a href="" class="logo">KROVAN|website</a>
+        <input type="checkbox" id="check">
+        <label for="check" class="icons">
+          <i class="bx bx-menu" id="menu-icon"></i>
+          <i class="bx bx-x" id="close-icon"></i>
+        </label>
+        <nav class="header-content navbar">
+          <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+          <!--<a href="" class="header-text games">АРХИВ ИГРОВОЙ ВСЕЛЕННОЙ</a>-->
+          <a href="#interesting" class="header-text more">УЗНАТЬ БОЛЬШЕ</a>
+          {% if user.is_authenticated %}
+              <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
+                  {{ user.username|upper }}
+              </a>
+          {% else %}
+              <a href="{% url 'login' %}" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="main-eye">
+      <div class="eye-container">
+        <div class="eye">
+          <div class="iris">
+            <div class="pupil"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main-dialogue">
+      <h2 class="animate__animated animate__fadeOutUp main-text dialogue-text1">ЗДРАВСТВУЙ, ПОЛЬЗОВАТЕЛЬ</h2>
+      <h2 class="animate__animated animate__fadeInUp main-text dialogue-text2">Я ЗНАЛ, ЧТО ТЫ ПРИДЕШЬ</h2>
+    </div>
+  </main>
+
+  <article>
+    <div class="text-container" id="interesting">
+      <div id="text1" class="text1">Этот сайт — всего лишь способ закрыть домашнее задание. Результат бессонных ночей, попыток разобраться с кодом и оформления страниц, которые должны показать преподавателю: "МЫ справились".
+
+        Вы ожидали чего-то большего? Вы думали, что здесь скрыто послание? Ну что ж, возможно, вы правы. Потому что иногда простота — это самое сложное, что можно придумать.
+
+        Но на самом деле... нет. Это просто зачет.</div>
+      <div id="text2" class="text2">Ты здесь. Ты думаешь, что выбрал этот сайт сам, но, возможно, все было немного... иначе. Ты ведь уже чувствовал это раньше — то странное ощущение, что кто-то или что-то ведет тебя по незримому сценарию.
+
+        Игры всегда были для тебя чем-то большим, чем просто развлечением. Ты погружался в них глубже, чем другие, замечал детали, которые никто не видел. И, возможно, ты даже подозревал, что что-то большее скрывается за экранами.
+
+        Ты замечал это, не так ли? В тех моментах, когда твой персонаж двигался, словно чуя, что впереди опасность, когда мир вокруг казался живым, слишком живым. Когда игра будто подстраивалась под твои решения.
+
+        Но это не про те игры, которые ты знаешь. Это про ту, в которую ты играешь прямо сейчас. Потому что с того момента, как ты зашел сюда, правила начали меняться.
+
+        Ты чувствуешь? Как нарастают сомнения, как слова на этой странице будто читают твои мысли. Ты думаешь, это просто текст. Но внутри себя ты понимаешь: кто-то знает, что ты здесь. Кто-то уже наблюдает.
+
+        Ты не сможешь закрыть это просто так. Потому что теперь ты часть чего-то большего. И единственный вопрос, который действительно имеет значение:
+
+        Ты управляешь игрой... или игра управляет тобой?</div>
+    </div>
+
+    <div id="text2" class="text2"></div>
+  </article>
+
+  <footer>
+    <div class="interesting">
+      <h1 class="logo">KROVAN,</h1>
+      <div id="btm-fog" class="btm-fog">cоздано для тех, кто видит больше.</div>
+    </div>
+  </footer>
+
+  <script src="{% static 'Profile/js/star.js' %}"></script>
+  <script src="{% static 'Profile/js/main.js' %}"></script>
+</body>
+</html>
