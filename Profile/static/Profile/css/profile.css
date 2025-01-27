@@ -46,7 +46,6 @@ body {
   .background-profile-block {
     width: 100%;
     height: 85%;
-    background-image: url("../content/background-1.jpg");
     background-size: cover;
     background-position:center center;
     border-top-left-radius: 1vh;
@@ -300,7 +299,6 @@ article {
 .background-profile-block {
   width: 100%;
   height: 85%;
-  background-image: url("../content/background-1.jpg");
   background-size: cover;
   background-position:center center;
   border-top-left-radius: 1vh;
@@ -328,7 +326,6 @@ article {
   width: 75px;
   height: 75px;
   border-radius: 10px;
-  background-image: url("../content/avatar.jpg");
   background-size: cover;
   background-position:center center;
 }
