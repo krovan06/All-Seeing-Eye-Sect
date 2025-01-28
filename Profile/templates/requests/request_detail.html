@@ -1,20 +1,55 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<h2>{{ request.title }}</h2>
-<p><strong>Дата создания:</strong> {{ request.created_at|date:"d.m.Y H:i" }}</p>
-<p><strong>Статус:</strong> 
-    {% if request.status == 'pending' %}
-        На рассмотрении
-    {% elif request.status == 'approved' %}
-        Одобрено
-    {% elif request.status == 'rejected' %}
-        Отклонено
-    {% endif %}
-</p>
-<p><strong>Описание:</strong> {{ request.body }}</p>
-{% if request.file %}
-<p><strong>Прикрепленный файл:</strong> <a href="{{ request.file.url }}" target="_blank">Скачать</a></p>
-{% endif %}
-<a href="{% url 'my_requests' %}" class="btn btn-secondary">Назад к списку</a>
-{% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <canvas id="particlesCanvas"></canvas>
+
+    <header>
+        <div class="main-header-container">
+            <div class="content-container">
+                <a href="#" class="logo">KROVAN|website</a>
+                <input type="checkbox" id="check">
+                <label for="check" class="icons">
+                    <i class="bx bx-menu" id="menu-icon"></i>
+                    <i class="bx bx-x" id="close-icon"></i>
+                </label>
+                <nav class="header-content navbar">
+                    <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+                    <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">{{ user.username|upper }}</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content-container">
+        <div class="aplication-container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+<!--                <textarea name="title" class="aplication-name" placeholder="Введите заголовок заявки..." required>{{ request.tile }}</textarea>-->
+                <textarea name="body" class="aplication-main-content" placeholder="Введите содержание заявки..." required>{{ request.body }}</textarea>
+                {% if request.file %}
+                    <p><strong>Прикрепленный файл:</strong> <a href="{{ request.file.url }}" target="_blank">Скачать</a></p>
+                {% endif %}
+                <p><strong>Дата создания:</strong> {{ request.created_at|date:"d.m.Y H:i" }}</p>
+                <div class="button-container">
+                    <a href="{% url 'manage_requests' %}" class="go-btn btn btn-secondary">Назад к таблице.</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'Profile/js/aplication.js' %}"></script>
+</body>
+</html>

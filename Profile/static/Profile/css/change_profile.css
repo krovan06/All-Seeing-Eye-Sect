@@ -191,6 +191,27 @@ html {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
+.new-messege-by-email-container {
+    margin: 8vh auto;
+    width: 90%;
+    height: 20vh;
+    max-width: 600px;
+    background: rgba(21, 20, 20, 0.54);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.change-pass-link {
+    color: #343131;
+    text-decoration: none;
+}
+
 .title {
     text-align: center;
     margin-bottom: 20px;
@@ -232,8 +253,31 @@ html {
     font-size: 14px;
 }
 
+.form-group {
+            margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 /* Стили для обычных текстовых полей */
 .text-input {
+    background-color: red;
     width: 95%;
     padding: 10px;
     font-family: Handjet , serif;
@@ -319,4 +363,38 @@ html {
 
 .back-link:hover {
     color: white;
+}
+
+
+.modal {
+  display: none; /* Скрыть по умолчанию */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 30%;
+  text-align: center;
+  position: relative;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-content button {
+  margin: 10px;
 }

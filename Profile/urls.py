@@ -8,14 +8,14 @@ from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('', home_page, name='home_page'),  # Стартовый URL
-    path('user/id/<int:id>/', user_profile, name='user_profile'),
     path('register/', register, name='register'),
+    path('user/id/<int:id>/', user_profile, name='user_profile'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
     path('password-reset/', password_reset, name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
-    path('recovery/', send_recovery_email, name='send_recovery_email'),
+    path('recover/', send_recovery_email, name='send_recovery_email'),
     path('recovery/<uuid:token>/', recover_account, name='recover_account'),
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user-detail'),

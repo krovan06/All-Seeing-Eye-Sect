@@ -57,11 +57,11 @@
 <article>
   <div class="profile-content-block">
 
-      {% if user.is_staff %}
-          <div class="profile-button arch">
-            <a href="{% url 'manage_requests' %}" class="profile-button myarch">Управление заявками</a>
-          </div>
-      {% endif %}
+    {% if user.is_staff %}
+        <div class="profile-button arch">
+          <a href="{% url 'manage_requests' %}" class="profile-button myarch">Управление заявками</a>
+        </div>
+    {% endif %}
 
     <!-- Кнопка "Лента новостей" -->
     <div class="profile-button arch">

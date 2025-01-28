@@ -60,3 +60,37 @@
         createParticles();
     });
 })();
+
+document.addEventListener("DOMContentLoaded", function () {
+  const deleteButtons = document.querySelectorAll(".delete");
+  const modal = document.getElementById("deleteModal");
+  const deleteForm = document.getElementById("deleteForm");
+  const closeModal = document.querySelector(".close");
+  const cancelDelete = document.querySelector(".cancel-delete");
+
+  // Открытие модального окна при нажатии "Удалить"
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const deleteUrl = this.querySelector("a").getAttribute("href");
+      deleteForm.setAttribute("action", deleteUrl); // Установка action формы
+      modal.style.display = "block";
+    });
+  });
+
+  // Закрытие модального окна
+  closeModal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  cancelDelete.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // Закрытие модального окна при клике вне его
+  window.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});

@@ -60,7 +60,18 @@
           </td>
           <td data-label="Действия" class="actions">
               <button> <a href="{% url 'edit_request' req.id %}"  class="btn-link" >Редактировать</a></button>
-              <button class="delete"><a href="{% url 'delete_request_by_user' req.id %}" class="btn-link">Удалить</a></button>
+              <button class="delete"><a href="{% url 'delete_request_by_user' req.id %}" class="delete btn-link">Удалить</a></button>
+              <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <h2>Вы уверены, что хотите удалить заявку?</h2>
+                  <form id="deleteForm" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="confirm-delete">Да, удалить</button>
+                      <button type="button" class="cancel-delete">Отмена</button>
+                  </form>
+                </div>
+              </div>
           </td>
         </tr>
         {% endfor %}

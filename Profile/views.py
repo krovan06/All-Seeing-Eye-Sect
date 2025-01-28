@@ -165,6 +165,15 @@ class CustomLoginView(View):
         return render(request, 'registration/login.html', {'form': form})
 
 def news_feed(request):
+    approved_requests = Request.objects.filter(status='approved').order_by('-created_at')
+
+    return render(request, 'news/news_feed.html', {
+        'approved_requests': approved_requests,
+    })
+
+
+def post_detail(request, slug):
+    post = get_object_or_404(Request, slug=slug)
 
     BANNED_WORDS = ["негр", "кровь", "fuck", "арбуз"]
 
@@ -173,8 +182,9 @@ def news_feed(request):
             comment = comment.replace(word, "&!%*!")  # Или "*" * len(word) для звездочек
         return comment
 
+    # Получение комментариев к текущему посту
+    comments = post.comments.all()  # Предполагается, что у вас есть связь с комментариями
 
-    approved_requests = Request.objects.filter(status='approved').order_by('-created_at')
     form = CommentForm()
 
     if request.method == 'POST':
@@ -182,27 +192,24 @@ def news_feed(request):
         if form.is_valid():
             request_id = request.POST.get('request_id')
             try:
-                req = Request.objects.get(id=request_id)
+                req = Request.objects.get(id=request_id)  # Получение объекта по ID
                 comment = form.save(commit=False)
                 comment.user = request.user
                 comment.post = req
                 comment.body = censor_text(comment.body)  # Цензура перед сохранением
                 comment.save()
-                return redirect('news_feed')
+                return redirect('post_detail', slug=slug)  # Перенаправление на тот же пост
+
             except Request.DoesNotExist:
                 pass
 
-    return render(request, 'news/news_feed.html', {
-        'approved_requests': approved_requests,
-        'form': form,
-    })
-
-
-def post_detail(request, slug):
-    post = get_object_or_404(Request, slug=slug)
     return render(request, 'requests/post_detail.html', {
         'post': post,
+        'form': form,
+        'comments': comments,  # Передаем комментарии в шаблон
     })
+
+
 
 def UserCommentsView (request):
     comments = Comment.objects.filter(user=request.user).select_related('post').order_by('-created_at')
@@ -235,23 +242,18 @@ def redirect_to_profile(request):
 
 @login_required
 def user_edit_profile(request, id):
-    user = request.user
-
-    # Убедимся, что у пользователя есть профиль
-    if not hasattr(user, 'userprofile'):
-        UserProfile.objects.create(user=user)
-
-    profile = user.userprofile
+    user_profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST, request.FILES, instance=profile, user=user)
+        print("опа пошли изменения")
+        form = ProfileEditForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
-            return redirect('user_profile', id=user.id)
+            return redirect('user_profile', id=request.user.id)  # Редирект на профиль
     else:
-        form = ProfileEditForm(instance=profile, user=user)
+        form = ProfileEditForm(instance=user_profile)
 
-    return render(request, 'Profile/edit_profile.html', {'form': form})
+    return render(request, 'Profile/edit_profile.html', {'form': form, 'user': request.user})
 
 @login_required
 def user_profile(request, id):
@@ -278,7 +280,7 @@ class DeleteAccountView(LoginRequiredMixin, View):
 def send_recovery_email(request):
     print("HOME")
     if request.method == 'POST':
-        print("PIZDA")
+        print("GO")
         email = request.POST.get('email')
         try:
             print("LOCH")
@@ -307,7 +309,7 @@ def send_recovery_email(request):
         except User.DoesNotExist:
             messages.error(request, 'Пользователь с таким email не найден.')
 
-    return render(request, 'recovery/send_email.html')
+    return render(request, 'registration/password_reset_form.html')
 
 def recover_account(request, token):
     try:
@@ -329,6 +331,7 @@ def recover_account(request, token):
 
 #ПАРОЛИ
 def password_reset(request):
+    print("email улетел")
     user_email = request.user.email
     user = User.objects.get(email=user_email)
     token = default_token_generator.make_token(user)
@@ -372,11 +375,11 @@ def password_reset_confirm(request, uidb64, token):
                 messages.error(request, 'Пароли не совпадают или пусты.')
 
         # Рендер формы для смены пароля
-        return render(request, 'registration/PasswordResetConfirm.html', {
+        return render(request, 'recovery/send_email.html', {
             'validlink': True,
         })
     else:
         # Недействительная ссылка
-        return render(request, 'registration/PasswordResetConfirm.html', {
+        return render(request, 'recovery/send_email.html', {
             'validlink': False,
         })

@@ -4,71 +4,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лента новостей</title>
+    <link rel="stylesheet" href="{% static 'Profile/css/coms.css' %}">
 
-    <!-- Подключение шрифтов и стилей -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="{% static 'Profile/css/news.css' %}">
-    <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
-    <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
-
-    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-
-    <title>{{ post.title }}</title>
 </head>
+
 <body>
-    <canvas id="particlesCanvas"></canvas>
+<header>
+  <div class="main-header-container">
+    <div class="content-container">
+      <a href="" class="logo">KROVAN|website</a>
+      <input type="checkbox" id="check">
+      <label for="check" class="icons">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <i class="bx bx-x" id="close-icon"></i>
+      </label>
+      <nav class="header-content navbar">
+        <a href="#interesting" class="header-text more">УЗНАТЬ БОЛЬШЕ</a>
+        {% if user.is_authenticated %}
+              <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">
+                  {{ user.username|upper }}
+              </a>
+          {% else %}
+              <a href="{% url 'login' %}" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
+          {% endif %}
+      </nav>
+    </div>
+  </div>
+</header>
+<canvas id="particlesCanvas"></canvas>
+<div class="container">
+    <div class="news-feed">
+        <div class="news-item">
+            <img src="{{ post.file.url }}" class="news-image" alt="Картинка из бэка" />
+            <h3>{{ post.title }}</h3>
+            <p>
+                {{ post.body }}
+            </p>
+            <hr>
 
-    <header>
-        <div class="main-header-container">
-            <div class="content-container">
-                <a href="" class="logo">KROVAN|website</a>
-                <input type="checkbox" id="check">
-                <label for="check" class="icons">
-                    <i class="bx bx-menu" id="menu-icon"></i>
-                    <i class="bx bx-x" id="close-icon"></i>
-                </label>
-                <nav class="header-content navbar">
-                    <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
-                    <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">{{ user.username|upper }}</a>
-                </nav>
+            <h2>Комментарии</h2>
+
+            <div class="comments-container">
+                {% for comment in comments %}
+                    <div class="comment">
+                        {% if comment.user %}
+                            <p><strong>{{ comment.user.username }}</strong>:</p>
+                            <p>{{ comment.body }}</p>
+                        {% else %}
+                            <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
+                        {% endif %}
+                        <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+                    </div>
+                {% empty %}
+                    <p>Нет комментариев.</p>
+                {% endfor %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="request_id" value="{{ post.id }}">  <!-- Здесь передается ID поста -->
+                    {{ form.body }}  <!-- Поля формы для комментария -->
+                    <button type="submit" class="comment-button">Отправить</button>
+                </form>
             </div>
-        </div>
-    </header>
 
-    <div class="main-content-container">
-        <div class="post-container">
-            <h1 class="post-title">{{ post.title }}</h1>
-            {% if post.file %}
-                <div class="news-image" style="background-image: url({{ post.file.url }}); background-size: cover;"></div>
-            {% endif %}
-            <p class="post-body">{{ post.body }}</p>
-            {% for comment in req.comments.all %}
-              <div class="comment">
-                  {% if comment.user %}
-                      <p><strong>{{ comment.user.username }}</strong>:</p>
-                      <p>{{ comment.body }}</p>
-                  {% else %}
-                      <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
-                  {% endif %}
-                  <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
-              </div>
-            {% empty %}
-              <p>Нет комментариев.</p>
-            {% endfor %}
-            <p class="post-date"><small>Опубликовано: {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
+            <p><small>Опубликовано: 27.01.2025 14:00</small></p>
         </div>
     </div>
-
-
-
-    <script src="{% static 'Profile/js/aplication.js' %}"></script>
+</div>
+<script src="js/aplication.js"></script>
 </body>
 </html>
+
+<!--<div class="comments-container">-->
+<!--    <h3>Комментарии</h3>-->
+<!--    {% for comment in comments %}-->
+<!--        <div class="comment">-->
+<!--            {% if comment.user %}-->
+<!--                <p><strong>{{ comment.user.username }}</strong>:</p>-->
+<!--                <p>{{ comment.body }}</p>-->
+<!--            {% else %}-->
+<!--                <p><strong>Данный пользователь удалил аккаунт</strong>:</p>-->
+<!--            {% endif %}-->
+<!--            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>-->
+<!--        </div>-->
+<!--    {% empty %}-->
+<!--        <p>Нет комментариев.</p>-->
+<!--    {% endfor %}-->
+<!--    <form method="post">-->
+<!--        {% csrf_token %}-->
+<!--        <input type="hidden" name="request_id" value="{{ post.id }}">  &lt;!&ndash; Здесь передается ID поста &ndash;&gt;-->
+<!--        {{ form.body }}  &lt;!&ndash; Поля формы для комментария &ndash;&gt;-->
+<!--        <button type="submit" class="comment-button">Отправить</button>-->
+<!--    </form>-->
+<!--</div>-->

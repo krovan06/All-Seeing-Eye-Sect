@@ -44,8 +44,8 @@
       <div class="main-content-container">
         <div class="aplication-container">
               {% csrf_token %}
-              <textarea name="title" class="aplication-name" placeholder="Введите заголовок заявки..." required>{{ form.title.value }}</textarea>
-              <textarea name="body" class="aplication-main-content" placeholder="Введите содержание..." required>{{ form.body.value }}</textarea>
+              <textarea name="title" class="aplication-name" placeholder="Введите заголовок заявки..." required></textarea>
+              <textarea name="body" class="aplication-main-content" placeholder="Введите содержание..." required></textarea>
               <div class="aplication-img">
                 <div class="img-content">
                   <span class="img-placeholder">Импорт изображения</span>

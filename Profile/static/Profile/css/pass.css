@@ -1,0 +1,68 @@
+body {
+    font-family: 'Handjet', serif;
+    font-style: normal;
+    font-size: 20px;
+    font-variation-settings: "ELGR" 1, "ELSH" 5.2;
+    color: whitesmoke;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(23, 23, 23);
+}
+
+/* Контейнер формы */
+.password-reset-container {
+    margin: 10vh auto;
+    width: 90%;
+    max-width: 500px;
+    background: rgba(21, 20, 20, 0.54);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+/* Заголовок */
+.password-reset-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: whitesmoke;
+}
+/* Центрирование для p и h2 */
+p, h2 {
+    text-align: center; /* Для текста */
+}
+
+/* Поля ввода */
+.password-reset-form input[type="password"] {
+    width: 95%;
+    padding: 10px;
+    font-family: 'Handjet', serif;
+    border: none;
+    border-radius: 5px;
+    background: rgba(196, 196, 196, 0.1);
+    color: rgba(252, 235, 235, 0.94);
+    margin-bottom: 15px;
+}
+
+.password-reset-form input[type="password"]:focus {
+    outline: none;
+    background: rgba(240, 236, 219, 0.2);
+}
+
+/* Кнопка */
+.password-reset-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 231, 185, 0.6);
+    color: #343131;
+    font-family: 'Handjet', serif;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.password-reset-form button:hover {
+    background: rgb(255, 234, 147);
+}

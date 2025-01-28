@@ -1,6 +1,36 @@
 ::placeholder {
   font-family: 'Handjet', serif;
 }
+.agreement-block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px; /* Расстояние между чекбоксом и текстом */
+}
+
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: none;
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-10px);
+  }
+  40%, 80% {
+    transform: translateX(10px);
+  }
+}
 
 .eye-container {
   margin-top: 5%;
@@ -53,6 +83,7 @@
 
 .logreg-question {
   color: aliceblue;
+
 }
 
 .main-reg-container {
@@ -80,7 +111,7 @@
   background: rgba(0, 0, 0, 0.37);
 }
 
-.log-line {
+.log-line, .optional-mail {
   height: 10%;
   width: 80%;
   box-sizing: border-box;
@@ -106,39 +137,44 @@
 
 .logreg-btn {
   width: 80%;
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: 0.4s;
 }
 
 .log-btn {
-  width: 80%;
-  height: 50px;
-
+  width: 100%;
+  height: 40px;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
   border: 1px solid rgb(174, 174, 174);
-  border-radius: 5px;
+  border-radius: 9px;
   background: rgba(255, 255, 255, 0.552);
-
-  color: rgb(0, 0, 0);
-  font-size: 25px;
-
   transition: 0.4s;
 }
 
-.logreg-btn :hover {
-  color: aliceblue;
+.log-btn:hover {
   background: rgba(42, 42, 42, 0.552);
 }
+
+.btn-link {
+  text-decoration: none; /* Убираем подчеркивание */
+  color: rgb(0, 0, 0); /* Цвет текста */
+  font-size: 25px;
+  display: inline-block; /* Чтобы можно было регулировать отступы */
+  width: 100%;
+  text-align: center;
+}
+
+.log-btn:hover .btn-link {
+  color: aliceblue; /* Меняем цвет текста при наведении */
+}
+
 
 .reg-link {
   text-decoration: none;
@@ -157,7 +193,7 @@
   justify-content: space-between;
   flex-direction: column;
   width: 80%;
-  height: 40%;
+  height: 20%;
 }
 
 .optional-text {
@@ -165,20 +201,13 @@
   text-align: center;
 }
 
-.optional-mail {
-  height: 20%;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid rgb(255, 255, 255);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.71);
-
-  color: aliceblue;
-  font-size: 25px;
+.input-error {
+  border: 2px solid red;
 }
 
+
 .optional-number {
-  height: 20%;
+  height: 30%;
   width: 100%;
   box-sizing: border-box;
   border: 1px solid rgb(255, 255, 255);
@@ -207,4 +236,54 @@ body {
   color: whitesmoke;
   margin: 0;
   padding: 0;
+}
+
+
+/* Стили для модального окна */
+.modal {
+  display: none; /* Скрыто по умолчанию */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  color: #0e0f12;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.close {
+  color: #000000;
+  float: right;
+  font-size: 48px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 340px) {
+  .logreg-question {
+    font-size: 4vh;
+  }
+
+}
+
+button {
+    font-family:'Handjet', serif;
 }

@@ -23,14 +23,25 @@ class UserForm(forms.ModelForm):
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].error_messages.update({
+            'unique': "Этот логин уже занят.",
+        })
+        self.fields['email'].error_messages.update({
+            'invalid': "Введите корректный адрес",
+            'required': "Ваша почта",
+        })
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
     def clean_email(self):
+        print("пошла проверка")
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Этот адрес электронной почты уже зарегистрирован.")
+            raise forms.ValidationError("Почта занята.")
         return email
 
 class RequestForm(forms.ModelForm):
@@ -43,41 +54,49 @@ class RequestForm(forms.ModelForm):
         }
 
 class ProfileEditForm(forms.ModelForm):
-    username = forms.CharField(max_length=150, label="Никнейм", required=True)
-    # email = forms.EmailField(label="Электронная почта", required=True)
-    keep_avatar = forms.BooleanField(label="Оставить текущий аватар", required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and hasattr(self.instance, 'user'):
+            self.fields['username'].initial = self.instance.user.username
+
+
+    username = forms.CharField(
+        max_length=150,
+        label="Никнейм",
+        widget=forms.TextInput(attrs={
+            'class': 'text-input',
+            'placeholder': 'Введите новый никнейм...'
+        }),
+        required=True,
+    )
+    avatar = forms.ImageField(
+        label="Сменить аватар:",
+        widget=forms.FileInput(attrs={
+            'class': 'file-input',
+        }),
+        required=False,
+    )
+    background = forms.ImageField(
+        label="Сменить фон профиля:",
+        widget=forms.FileInput(attrs={
+            'class': 'file-input',
+        }),
+        required=False,
+    )
 
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'background']  # Поля для модели UserProfile
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user:
-            self.fields['username'].initial = user.username
-            # self.fields['email'].initial = user.email
+        fields = ['avatar', 'background', 'username']
 
     def save(self, commit=True):
-        profile = super().save(commit=False)
-        user = profile.user
+        print("ОП ОП сохраняем сохраняем")
+        profile = super().save(commit=False)  # Получаем объект профиля без сохранения
+        user = profile.user  # Доступ к связанному пользователю
 
-        # Сохраняем никнейм и почту
+        # Обновляем данные пользователя
         user.username = self.cleaned_data['username']
-        # user.email = self.cleaned_data['email']
-
-        # Если выбран чекбокс "Оставить текущий аватар", сбрасываем новое значение для аватара
-        if self.cleaned_data.get('keep_avatar'):
-            profile.avatar = self.instance.avatar
 
         if commit:
-            user.save()
-            profile.save()
+            user.save()  # Сохраняем изменения в модели User
+            profile.save()  # Сохраняем профиль
         return profile
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
-            raise forms.ValidationError("Этот адрес электронной почты уже используется.")
-        return email
-

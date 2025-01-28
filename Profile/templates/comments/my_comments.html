@@ -4,16 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои комментарии</title>
 
-    <!-- Подключение шрифтов и стилей -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
+    <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-    <title>Мои комментарии</title>
 </head>
 <body>
     <canvas id="particlesCanvas"></canvas>
@@ -35,33 +34,35 @@
         </div>
     </header>
 
-    <div class="main-content-container">
-        <div class="comments-container">
-            <h1>Мои комментарии</h1>
+    <h1>Мои комментарии</h1>
 
-            {% if comments %}
-                {% for comment in comments %}
-                <div class="comment">
-                    <div class="comment-header">
-                        <span>К посту:</span>
-                        <a href="{% url 'post_detail' slug=comment.post.slug %}" class="post-link">
-                            {{ comment.post.title }}
-                        </a>
-                    </div>
-                    <div class="comment-date">
-                        {{ comment.created_at|date:"d.m.Y H:i" }}
-                    </div>
-                    <div class="comment-text">
-                        {{ comment.body }}
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-            <div class="no-comments">
-                <p>Вы еще не оставили ни одного комментария.</p>
-            </div>
-            {% endif %}
-        </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>К посту</th>
+                    <th>Дата создания</th>
+                    <th>Комментарий</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if comments %}
+                    {% for comment in comments %}
+                    <tr>
+                        <td data-label="К посту">
+                            <a href="{% url 'post_detail' slug=comment.post.slug %}" class="btn-link">{{ comment.post.title }}</a>
+                        </td>
+                        <td data-label="Дата создания">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
+                        <td data-label="Комментарий">{{ comment.body }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">Вы еще не оставили ни одного комментария.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 
     <script src="{% static 'Profile/js/aplication.js' %}"></script>

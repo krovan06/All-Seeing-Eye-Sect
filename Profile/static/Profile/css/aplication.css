@@ -239,7 +239,6 @@ html {
   transition: 0.3s;
   color: #423f3f;
   font-size: 18px;
-  font-family: 'Rubik', sans-serif;
   font-weight: bold;
   margin-top: 2vh;
   height: 15%;
@@ -476,4 +475,9 @@ html {
   .icons {
     display: none;
   }
+}
+
+.btn-link {
+    text-decoration: none;
+    color: white;
 }
