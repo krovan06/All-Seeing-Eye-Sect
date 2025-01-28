@@ -280,7 +280,6 @@ class DeleteAccountView(LoginRequiredMixin, View):
 def send_recovery_email(request):
     print("HOME")
     if request.method == 'POST':
-        print("GO")
         email = request.POST.get('email')
         try:
             print("LOCH")
