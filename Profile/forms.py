@@ -11,7 +11,8 @@ class CommentForm(forms.ModelForm):
             'body': forms.Textarea(attrs={  # Изменили TextInput на Textarea
                 'placeholder': "коментарий..",
                 'rows': 3,
-                'class': 'comment-field'
+                'class': 'comment-field',
+                'id': 'commentText',
             }),
         }
 

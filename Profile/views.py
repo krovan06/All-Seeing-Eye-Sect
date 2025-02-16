@@ -20,8 +20,8 @@ from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-from django.views.generic import ListView
-from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+import json
 
 
 
@@ -174,39 +174,55 @@ def news_feed(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(Request, slug=slug)
-
-    BANNED_WORDS = ["негр", "кровь", "fuck", "арбуз"]
+    BANNED_WORDS = ["негр", "кровь", "fuck", "арбуз", "хуй"]
 
     def censor_text(comment):
         for word in BANNED_WORDS:
-            comment = comment.replace(word, "&!%*!")  # Или "*" * len(word) для звездочек
+            comment = comment.replace(word, "&!%*!")  # Фильтр запрещенных слов
         return comment
 
-    # Получение комментариев к текущему посту
-    comments = post.comments.all()  # Предполагается, что у вас есть связь с комментариями
-
+    # Получаем все комментарии с вложенностью
+    comments = Comment.objects.filter(post=post).select_related('user').prefetch_related('replies').order_by('created_at')
+    comments = Comment.objects.filter(post=post).order_by('-created_at')
     form = CommentForm()
 
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = json.loads(request.body)
+        body = data.get("body")
+        post_id = data.get("request_id")
+        parent_id = data.get("parent_id", None)
+
+        form = CommentForm({'body': body})
+
         if form.is_valid():
-            request_id = request.POST.get('request_id')
             try:
-                req = Request.objects.get(id=request_id)  # Получение объекта по ID
+                req = Request.objects.get(id=post_id)
                 comment = form.save(commit=False)
                 comment.user = request.user
                 comment.post = req
-                comment.body = censor_text(comment.body)  # Цензура перед сохранением
-                comment.save()
-                return redirect('post_detail', slug=slug)  # Перенаправление на тот же пост
+                comment.body = censor_text(comment.body)
 
+                if parent_id:
+                    parent_comment = Comment.objects.filter(id=parent_id).first()
+                    if parent_comment:
+                        comment.parent = parent_comment  # Привязываем к родительскому комментарию
+
+                comment.save()
+
+                return JsonResponse({
+                    'success': True,
+                    'username': comment.user.username if comment.user else "Аноним",
+                    'body': comment.body,
+                    'created_at': comment.created_at.strftime("%d.%m.%Y %H:%M"),
+                    'parent_id': comment.parent.id if comment.parent else None
+                })
             except Request.DoesNotExist:
-                pass
+                return JsonResponse({'success': False, 'error': "Пост не найден"}, status=400)
 
     return render(request, 'requests/post_detail.html', {
         'post': post,
         'form': form,
-        'comments': comments,  # Передаем комментарии в шаблон
+        'comments': comments
     })
 
 

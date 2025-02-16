@@ -52,34 +52,37 @@
             <hr>
 
             <h2>Комментарии</h2>
+           <form method="post" id="commentForm">
+                {% csrf_token %}
+                <input type="hidden" name="request_id" id="request_id" value="{{ post.id }}">
+                <input type="hidden" name="parent_id" id="parent_id">  <!-- Здесь будет ID родителя -->
+                <textarea id="commentText" name="body"></textarea>
+                <button type="submit" class="comment-button">Отправить</button>
+            </form>
 
-            <div class="comments-container">
+            <div class="comments-container" id="commentsContainer">
                 {% for comment in comments %}
-                    <div class="comment">
-                        {% if comment.user %}
+                    {% if not comment.parent %}  {# Показываем только корневые комментарии #}
+                        <div class="comment" data-id="{{ comment.id }}">
                             <p><strong>{{ comment.user.username }}</strong>:</p>
                             <p>{{ comment.body }}</p>
-                        {% else %}
-                            <p><strong>Данный пользователь удалил аккаунт</strong>:</p>
-                        {% endif %}
-                        <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
-                    </div>
-                {% empty %}
-                    <p>Нет комментариев.</p>
+                            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+                            <button class="reply-button" data-id="{{ comment.id }}">Ответить</button>
+
+                            <div class="replies">
+                                {% include 'requests/comment_replies.html' with replies=comment.replies.all %}
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="request_id" value="{{ post.id }}">  <!-- Здесь передается ID поста -->
-                    {{ form.body }}  <!-- Поля формы для комментария -->
-                    <button type="submit" class="comment-button">Отправить</button>
-                </form>
             </div>
+
 
             <p><small>Опубликовано: 27.01.2025 14:00</small></p>
         </div>
     </div>
 </div>
-<script src="js/aplication.js"></script>
+<script src="{% static 'Profile/js/aplication.js' %}"></script>
 </body>
 </html>
 

@@ -54,7 +54,9 @@
             <h2 class="news-text">|</h2>
             <div class="test-author-name"><h2 class="news-text">{{ req.title }}</h2></div>
           </div>
-          <div class="test-image" style="background-image: url({{ req.file.url }});"></div>
+          {% if req.file %}
+            <div class="test-image" style="background-image: url({{ req.file.url }});"></div>
+          {% endif %}
           <div class="news-text test-text ">{{ req.body }}</div>
           <!-- Новая кнопка -->
           {% if user.is_authenticated %}

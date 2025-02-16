@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for reply in replies %}
+        <div class="comment reply" data-id="{{ reply.id }}">
+            <p><strong>{{ reply.user.username }}</strong>:</p>
+            <p>{{ reply.body }}</p>
+            <p><small>Создан: {{ reply.created_at|date:"d.m.Y H:i" }}</small></p>
+            <button class="reply-button" data-id="{{ reply.id }}">Ответить</button>
+
+            <div class="replies">
+                {% include 'requests/comment_replies.html' with replies=reply.replies.all %}
+            </div>
+        </div>
+    {% endfor %}
+
+</body>
+</html>
