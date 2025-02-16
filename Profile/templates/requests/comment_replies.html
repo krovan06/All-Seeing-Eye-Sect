@@ -8,8 +8,11 @@
     {% for reply in replies %}
         <div class="comment reply" data-id="{{ reply.id }}">
             <p><strong>{{ reply.user.username }}</strong>:</p>
-            <p>{{ reply.body }}</p>
+            <p class="comment-body">{{ reply.body }}</p>
             <p><small>Создан: {{ reply.created_at|date:"d.m.Y H:i" }}</small></p>
+            {% if comment.user == request.user and comment.editable_until > now %}
+                <button class="edit-button" data-id="{{ comment.id }}">Редактировать</button>
+            {% endif %}
             <button class="reply-button" data-id="{{ reply.id }}">Ответить</button>
 
             <div class="replies">

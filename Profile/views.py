@@ -225,6 +225,33 @@ def post_detail(request, slug):
         'comments': comments
     })
 
+def edit_comment(request, comment_id):
+    if request.method == "POST":
+        try:
+            comment = Comment.objects.get(id=comment_id, user=request.user)
+            editing_started = json.loads(request.body).get("editing_started", False)
+
+            # Проверяем, истекло ли время редактирования
+            if timezone.now() > comment.editable_until and not editing_started:
+                return JsonResponse({"error": "Время редактирования истекло"}, status=403)
+
+            data = json.loads(request.body)
+            new_body = data.get("body")
+
+            if not new_body or new_body.strip() == "":
+                return JsonResponse({"error": "Текст комментария не может быть пустым"}, status=400)
+
+            comment.body = new_body.strip()
+            comment.save()
+            return JsonResponse({"success": True, "new_body": comment.body})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Некорректный JSON"}, status=400)
+        except Comment.DoesNotExist:
+            return JsonResponse({"error": "Комментарий не найден"}, status=404)
+
+    return JsonResponse({"error": "Неверный метод"}, status=405)
+
 
 
 def UserCommentsView (request):

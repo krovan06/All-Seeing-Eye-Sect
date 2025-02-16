@@ -44,7 +44,9 @@
 <div class="container">
     <div class="news-feed">
         <div class="news-item">
-            <img src="{{ post.file.url }}" class="news-image" alt="Картинка из бэка" />
+            {% if post.file %}
+                <img src="{{ post.file.url }}" class="news-image" alt="Картинка из бэка" />
+            {%endif%}
             <h3>{{ post.title }}</h3>
             <p>
                 {{ post.body }}
@@ -63,12 +65,14 @@
             <div class="comments-container" id="commentsContainer">
                 {% for comment in comments %}
                     {% if not comment.parent %}  {# Показываем только корневые комментарии #}
-                        <div class="comment" data-id="{{ comment.id }}">
+                        <div class="comment" data-id="{{ comment.id }}" data-created="{{ comment.created_at.timestamp }}">
                             <p><strong>{{ comment.user.username }}</strong>:</p>
-                            <p>{{ comment.body }}</p>
+                            <p class="comment-body">{{ comment.body }}</p>
                             <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
                             <button class="reply-button" data-id="{{ comment.id }}">Ответить</button>
-
+                            {% if comment.user == request.user and comment.editable_until > now %}
+                                <button class="edit-button" data-id="{{ comment.id }}">Редактировать</button>
+                            {% endif %}
                             <div class="replies">
                                 {% include 'requests/comment_replies.html' with replies=comment.replies.all %}
                             </div>

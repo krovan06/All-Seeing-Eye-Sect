@@ -96,6 +96,70 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    let editingInProgress = {}; // Сохраняем состояния редактирования для каждого комментария
+
+    document.querySelectorAll(".edit-button").forEach(button => {
+        button.addEventListener("click", function () {
+            let commentId = this.dataset.id;
+            let commentElement = this.closest(".comment").querySelector("p:nth-of-type(2)"); // Второй <p>, где текст
+
+            if (!commentElement || editingInProgress[commentId]) return;
+
+            // Сохраняем старый текст
+            let oldText = commentElement.textContent;
+            let textarea = document.createElement("textarea");
+            textarea.classList.add("edit-textarea");
+            textarea.value = oldText;
+
+            commentElement.replaceWith(textarea);
+
+            let saveButton = document.createElement("button");
+            saveButton.textContent = "Сохранить";
+            saveButton.classList.add("save-button");
+            saveButton.dataset.id = commentId;
+
+            textarea.after(saveButton);
+            editingInProgress[commentId] = true;
+
+            saveButton.addEventListener("click", function () {
+                let newText = textarea.value.trim();
+                if (!newText) {
+                    alert("Комментарий не может быть пустым!");
+                    return;
+                }
+
+                fetch(`/edit_comment/${commentId}/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ body: newText })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let newParagraph = document.createElement("p");
+                        newParagraph.classList.add("comment-body");
+                        newParagraph.textContent = newText;
+                        textarea.replaceWith(newParagraph);
+                        saveButton.remove();
+                        editingInProgress[commentId] = false;
+                    } else {
+                        alert("Ошибка при сохранении: " + (data.error || "Неизвестная ошибка"));
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка запроса:", error);
+                    alert("Ошибка при сохранении комментария");
+                });
+            });
+        });
+    });
+});
+
+
 
 
 
