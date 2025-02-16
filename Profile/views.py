@@ -222,7 +222,8 @@ def post_detail(request, slug):
     return render(request, 'requests/post_detail.html', {
         'post': post,
         'form': form,
-        'comments': comments
+        'comments': comments,
+        'now': now(),
     })
 
 def edit_comment(request, comment_id):

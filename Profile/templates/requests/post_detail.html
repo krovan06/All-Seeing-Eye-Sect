@@ -68,9 +68,9 @@
                         <div class="comment" data-id="{{ comment.id }}" data-created="{{ comment.created_at.timestamp }}">
                             <p><strong>{{ comment.user.username }}</strong>:</p>
                             <p class="comment-body">{{ comment.body }}</p>
-                            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+                            <p><small>Создан: {{ comment.created_at|date:"d.m.Y H:i" }} {{ comment.editable_until }}</small></p>
                             <button class="reply-button" data-id="{{ comment.id }}">Ответить</button>
-                            {% if comment.user == request.user and comment.editable_until > now %}
+                            {% if comment.user == request.user and comment.editable_until %}
                                 <button class="edit-button" data-id="{{ comment.id }}">Редактировать</button>
                             {% endif %}
                             <div class="replies">
