@@ -276,7 +276,8 @@ def post_detail(request, slug):
         'post': post,
         'form': form,
         'comments': comments,
-        'now': now(),
+        'now': timezone.now()
+,
     })
 
 def mark_comment_read(request):

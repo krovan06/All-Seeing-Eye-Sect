@@ -28,7 +28,7 @@
           <i class="bx bx-x" id="close-icon"></i>
         </label>
         <nav class="header-content navbar">
-          <a href="news.html" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+          <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
           <!--<a href="games.html" class="header-text games">АРХИВ ИГРОВОЙ ВСЕЛЕННОЙ</a>-->
           <!--<a href="#interesting" class="header-text more">УЗНАТЬ БОЛЬШЕ</a>-->
           <a href="{% url 'user_profile' id=user.id %}" class="header-text brotherhood">

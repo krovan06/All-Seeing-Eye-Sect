@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".edit-button").forEach(button => {
         button.addEventListener("click", function () {
             let commentId = this.dataset.id;
-            let commentElement = this.closest(".comment").querySelector("p:nth-of-type(2)"); // Второй <p>, где текст
+            let commentElement = this.closest(".comment").querySelector(".comment-body"); // Второй <p>, где текст
 
             if (!commentElement || editingInProgress[commentId]) return;
 

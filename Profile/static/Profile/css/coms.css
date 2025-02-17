@@ -10,6 +10,138 @@ body {
     background-color: rgb(23, 23, 23);
 }
 
+/* Стили для кнопок комментариев */
+.comment-button, .reply-button, .edit-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Handjet', sans-serif;
+  color: #ffffff;
+  background-color: #6c63ff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.comment-button:hover, .reply-button:hover, .edit-button:hover {
+  background-color: #554de8;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.comment-button:active, .reply-button:active, .edit-button:active {
+  transform: translateY(2px);
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.reply-button {
+  background-color: #4caf50;
+}
+
+.reply-button:hover {
+  background-color: #45a047;
+}
+
+.edit-button {
+  background-color: #ff9800;
+}
+
+.edit-button:hover {
+  background-color: #e68900;
+}
+
+/* Общие стили */
+.comment-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+/* Стили для кнопок */
+.comment-button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.comment-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.comment-actions {
+  display: flex;
+  gap: 16px; /* Расстояние между кнопками */
+}
+
+/* Стили для кнопки "Сохранить" */
+.send-reply, .save-button {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+.send-reply, .save-button:hover {
+  background-color: #45a049;
+}
+/* Поле ввода и кнопка ответа на одной линии */
+.reply-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.reply-input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+  min-height: 40px;
+}
+.reply-input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+
+/* Стили для поля ввода */
+.reply-input, .edit-textarea {
+    margin-top: 2%;
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  transition: border-color 0.3s;
+  min-height: 50px;
+}
+.comment-input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Контейнер для поля и кнопки на одном уровне */
+.comment-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 
 canvas {
     display: block;
