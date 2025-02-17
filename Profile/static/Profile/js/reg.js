@@ -107,29 +107,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Валидация пароля в реальном времени
   password1Input.addEventListener('input', () => {
     const value = password1Input.value.trim();
-  if (!value) {
-    passwordError.textContent = 'Поле "Пароль" обязательно для заполнения.';
-    passwordError.style.display = 'block';
-    password1Input.classList.add('input-error');
-  }
-  // Минимальная длина пароля
-  else if (value.length < 8) {
-    passwordError.textContent = 'Пароль должен содержать минимум 8 символов.';
-    passwordError.style.display = 'block';
-    password1Input.classList.add('input-error');
-  }
-  // Наличие хотя бы одной буквы
-  else if (!/[a-zA-Z]/.test(value)) {
-    passwordError.textContent = 'Пароль должен содержать хотя бы одну латинскую букву.';
-    passwordError.style.display = 'block';
-    password1Input.classList.add('input-error');
-  }
-  // Проверка на слишком простой пароль
-  else if (/^\d+$/.test(value) || /^(.)\1+$/.test(value)) {
-    passwordError.textContent = 'Пароль слишком простой. Используйте разные символы.';
-    passwordError.style.display = 'block';
-    password1Input.classList.add('input-error');
-  } else {
+    if (!value) {
+      passwordError.textContent = 'Поле "Пароль" обязательно для заполнения.';
+      passwordError.style.display = 'block';
+      password1Input.classList.add('input-error');
+    }
+    // Минимальная длина пароля
+    else if (value.length < 8) {
+      passwordError.textContent = 'Пароль должен содержать минимум 8 символов.';
+      passwordError.style.display = 'block';
+      password1Input.classList.add('input-error');
+    }
+    // Наличие хотя бы одной буквы
+    else if (!/[a-zA-Z]/.test(value)) {
+      passwordError.textContent = 'Пароль должен содержать хотя бы одну латинскую букву.';
+      passwordError.style.display = 'block';
+      password1Input.classList.add('input-error');
+    }
+    // Проверка на слишком простой пароль
+    else if (/^\d+$/.test(value) || /^(.)\1+$/.test(value)) {
+      passwordError.textContent = 'Пароль слишком простой. Используйте разные символы.';
+      passwordError.style.display = 'block';
+      password1Input.classList.add('input-error');
+    } else {
       passwordError.style.display = 'none';
       password1Input.classList.remove('input-error');
     }
@@ -149,89 +149,94 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-
+  // Обработчик отправки формы
   submitButton.addEventListener('click', async (event) => {
-  event.preventDefault();
-  let valid = true;
+    event.preventDefault();
+    let valid = true;
 
-  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-  // Проверка всех полей перед отправкой
-  if (!loginInput.value.trim()) {
-    loginError.textContent = 'Поле "Логин" обязательно для заполнения.';
-    loginError.style.display = 'block';
-    loginInput.classList.add('input-error');
-    shakeElement(loginInput);
-    valid = false;
-  }
-
-  if (!emailInput.value.trim()) {
-    emailError.textContent = 'Поле "Почта" обязательно для заполнения.';
-    emailError.style.display = 'block';
-    emailInput.classList.add('input-error');
-    shakeElement(emailInput);
-    valid = false;
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
-    emailError.textContent = 'Введите корректный Email.';
-    emailError.style.display = 'block';
-    emailInput.classList.add('input-error');
-    shakeElement(emailInput);
-    valid = false;
-  }
-
-  if (!password1Input.value.trim()) {
-    passwordError.textContent = 'Поле "Пароль" обязательно для заполнения.';
-    passwordError.style.display = 'block';
-    password1Input.classList.add('input-error');
-    shakeElement(password1Input);
-    valid = false;
-  }
-
-  if (password2Input.value.trim() !== password1Input.value.trim()) {
-    password2Error.textContent = 'Пароли должны совпадать.';
-    password2Error.style.display = 'block';
-    password2Input.classList.add('input-error');
-    shakeElement(password2Input);
-    valid = false;
-  }
-
-  if (!agreementCheckbox.checked) {
-    checkboxError.textContent = 'Вы должны согласиться с пользовательским соглашением.';
-    checkboxError.style.display = 'block';
-    shakeElement(agreementCheckbox);
-    valid = false;
-  }
-
-  // Если все проверки пройдены, отправляем данные на сервер
-  if (valid) {
-    const formData = new FormData();
-    formData.append('username', loginInput.value.trim());
-    formData.append('email', emailInput.value.trim());
-    formData.append('password1', password1Input.value.trim());
-    formData.append('password2', password2Input.value.trim());
-    formData.append('phone', phoneInput.value.trim());
-
-    try {
-      const response = await fetch('/register/', {
-  method: 'POST',
-  headers: {
-    'X-CSRFToken': csrfToken, // Заголовок с токеном
-  },
-  body: formData,
-      });
-      const data = await response.json();
-      if (data.success) {
-        // Редирект на страницу логина
-        window.location.href = '/login';
-      } else {
-
-        alert('Ошибка регистрации');
-      }
-    } catch (error) {
-      console.error('Ошибка при отправке данных:', error);
+    // Проверка всех полей перед отправкой
+    if (!loginInput.value.trim()) {
+      loginError.textContent = 'Поле "Логин" обязательно для заполнения.';
+      loginError.style.display = 'block';
+      loginInput.classList.add('input-error');
+      shakeElement(loginInput);
+      valid = false;
     }
-  }
-});
+
+    if (!emailInput.value.trim()) {
+      emailError.textContent = 'Поле "Почта" обязательно для заполнения.';
+      emailError.style.display = 'block';
+      emailInput.classList.add('input-error');
+      shakeElement(emailInput);
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+      emailError.textContent = 'Введите корректный Email.';
+      emailError.style.display = 'block';
+      emailInput.classList.add('input-error');
+      shakeElement(emailInput);
+      valid = false;
+    } else {
+      // Проверка уникальности почты перед отправкой
+      const isEmailUnique = await checkUnique('email', emailInput.value.trim(), emailError, emailInput);
+      if (!isEmailUnique) {
+        valid = false;
+      }
+    }
+
+    if (!password1Input.value.trim()) {
+      passwordError.textContent = 'Поле "Пароль" обязательно для заполнения.';
+      passwordError.style.display = 'block';
+      password1Input.classList.add('input-error');
+      shakeElement(password1Input);
+      valid = false;
+    }
+
+    if (password2Input.value.trim() !== password1Input.value.trim()) {
+      password2Error.textContent = 'Пароли должны совпадать.';
+      password2Error.style.display = 'block';
+      password2Input.classList.add('input-error');
+      shakeElement(password2Input);
+      valid = false;
+    }
+
+    if (!agreementCheckbox.checked) {
+      checkboxError.textContent = 'Вы должны согласиться с пользовательским соглашением.';
+      checkboxError.style.display = 'block';
+      shakeElement(agreementCheckbox);
+      valid = false;
+    }
+
+    // Если все проверки пройдены, отправляем данные на сервер
+    if (valid) {
+      const formData = new FormData();
+      formData.append('username', loginInput.value.trim());
+      formData.append('email', emailInput.value.trim());
+      formData.append('password1', password1Input.value.trim());
+      formData.append('password2', password2Input.value.trim());
+      formData.append('phone', phoneInput.value.trim());
+
+      try {
+        const response = await fetch('/register/', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken, // Заголовок с токеном
+          },
+          body: formData,
+        });
+        const data = await response.json();
+        if (data.success) {
+          // Редирект на страницу логина
+          window.location.href = '/login';
+        } else {
+          alert('Ошибка регистрации');
+        }
+      } catch (error) {
+        console.error('Ошибка при отправке данных:', error);
+      }
+    }
+  });
 
   /* ГЛАЗ */
   const eye = document.querySelector('.eye');
