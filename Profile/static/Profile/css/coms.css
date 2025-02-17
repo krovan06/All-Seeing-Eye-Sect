@@ -9,15 +9,53 @@ body {
     padding: 0;
     background-color: rgb(23, 23, 23);
 }
+.comment-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reply-form, .edit-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reply-form textarea, .edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    font-size: 14px;
+    min-height: 80px;
+}
+
+.reply-form button, .edit-form button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.reply-form button:hover, .edit-form button:hover {
+    background-color: #45a049;
+}
 
 /* Стили для кнопок комментариев */
-.comment-button, .reply-button, .edit-button {
+.reply-button, .edit-button {
   padding: 12px 24px;
   font-size: 16px;
   font-weight: bold;
   font-family: 'Handjet', sans-serif;
   color: #ffffff;
-  background-color: #6c63ff;
+  background-color: #262623;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -25,7 +63,7 @@ body {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.comment-button:hover, .reply-button:hover, .edit-button:hover {
+.reply-button:hover, .edit-button:hover {
   background-color: #554de8;
   transform: translateY(-2px);
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
@@ -36,27 +74,60 @@ body {
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.reply-button {
-  background-color: #4caf50;
+
+.comment-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
 }
 
+.reply-form, .edit-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reply-form textarea, .edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    font-size: 14px;
+    min-height: 80px;
+}
+
+.reply-form button, .edit-form button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.reply-form button:hover, .edit-form button:hover {
+    background-color: #45a049;
+}
 .reply-button:hover {
-  background-color: #45a047;
+  background-color: #346534;
 }
 
-.edit-button {
-  background-color: #ff9800;
-}
+
 
 .edit-button:hover {
-  background-color: #e68900;
+  background-color: #7e633a;
 }
 
 /* Общие стили */
 .comment-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   padding: 8px;
   border-radius: 12px;
   border: 1px solid #ccc;
@@ -65,9 +136,11 @@ body {
 
 /* Стили для кнопок */
 .comment-button {
-  padding: 6px 12px;
+  padding: 12px 12px;
   border-radius: 8px;
   border: none;
+    margin-bottom: 10px;
+    margin-top:0%;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -138,7 +211,7 @@ body {
 .comment-form {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 

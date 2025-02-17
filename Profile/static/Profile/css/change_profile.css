@@ -1,400 +1,150 @@
+/* Основные стили для страницы */
 body {
     font-family: 'Handjet', serif;
     font-style: normal;
-    font-size: 20px ;
-    font-variation-settings: "ELGR" 1,
-    "ELSH" 5.2;
+    font-size: 20px;
+    font-variation-settings: "ELGR" 1, "ELSH" 5.2;
     color: whitesmoke;
     margin: 0;
     padding: 0;
     background-color: rgb(23, 23, 23);
-}
-
-
-canvas {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
-
-/* ШАПКА */
-html {
-    scroll-behavior: smooth;
-}
-#close-icon {
-    display: none;
-}
-:root {
-    --index: 1vh + 1vw;
-}
-
-/* Если меню открыто (чекбокс активен), меняем иконки */
-#check:checked ~ .icons #menu-icon {
-    display: none;
-}
-#check:checked ~ .icons #close-icon {
-    display: block;
-}
-#check {
-    display: none;
-}
-.icons {
-    display: none;
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-
-}
-.navbar a {
-    text-align: center;
-    padding: 1rem;
-    font-size: 2rem;
-    color: white;
-    text-decoration: none;
-}
-
-/* Применение шрифта ко всем элементам */
-/*ШАПКА*/
-.main-header-container {
-    position: relative;
-    width: 100%;
-    height: 8vh;
-    backdrop-filter: blur(2px);
-    background: rgba(102, 102, 102, 0.16);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 1;
+    align-items: center;
+    height: 100vh;
 }
-.content-container {
-    position: relative;
+
+/* Контейнер для основного содержимого */
+main {
+    background: rgba(21, 20, 20, 0.54);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 0px 2px rgba(224, 224, 224, 0.54);
+    max-width: 500px;
     width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 2;
-}
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 80px;
-}
-.logo, .header-text {
-    text-decoration: none;
-    color: rgb(255, 255, 255);
-    font-size: 2rem;
-    transition: 0.5s;
-}
-.header-text {
-    font-size: 2rem;
-    transition: 0.3s;
-}
-.news:hover, .games:hover, .more:hover, .brotherhood:hover {
-    font-size: calc(var(--index) * .95);
-    transition: font-size 0.3s ease, color 0.3s ease;
-}
-.news:hover {
-    color: rgb(123, 102, 40);
-}
-.games:hover {
-    color: rgb(40, 59, 123);
-}
-.more:hover {
-    color: rgb(55, 40, 123);
-}
-.brotherhood:hover {
-    color: rgb(123, 40, 40);
-}
-.logo:hover {
-    color: rgb(123, 40, 40);
-    cursor: pointer;
-}
-
-.logo{
-    margin-left: calc(var(--index) * 1.9); ;
-}
-
-
-@media (max-width: 1182px) {
-
-    .navbar {
-        position: absolute;
-        top: 8vh;
-        left: 0;
-        width: 100%;
-        height: 0;
-        flex-direction: column;
-        background: rgba(0, 0, 0, 0.9);
-        overflow: hidden;
-        transition: height 0.3s ease, padding 0.3s ease;
-    }
-    .icons {
-        display: inline-flex;
-    }
-    #check:checked ~ .icons #menu-icon {
-        display: none;
-    }
-    #check:checked ~ .icons #close-icon {
-        display: block;
-    }
-    #check:checked ~ .navbar {
-        height: auto;
-        padding: 1rem;
-    }
-    .navbar a {
-        text-align: center;
-        padding: 0.2rem;
-        font-size: 1.6rem;
-        color: white;
-        text-decoration: none;
-    }
-}
-
-
-.navbar {
-    margin-right: calc(var(--index) * 1.9);
-}
-@media (min-width: 1182px) {
-    .navbar {
-        flex-direction: row;
-        height: auto;
-        background: none;
-        position: static;
-    }
-    .navbar a {
-        font-size: calc(var(--index) * .85);
-        color: #fff;
-        padding: 0 0.5rem;
-    }
-    .icons {
-        display: none;
-    }
-}
-
-
-.file-name {
-    margin-top: 5px;
-    color: rgba(240, 236, 219, 0.9);
-    font-size: 14px;
-    font-style: italic;
-}
-.profile-edit-container {
-    margin: 8vh auto;
-    width: 90%;
-    max-width: 600px;
-    background: rgba(21, 20, 20, 0.54);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
-
-.new-messege-by-email-container {
-    margin: 8vh auto;
-    width: 90%;
-    height: 20vh;
-    max-width: 600px;
-    background: rgba(21, 20, 20, 0.54);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-
-.change-pass-link {
-    color: #343131;
-    text-decoration: none;
-}
-
-.title {
     text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Заголовок */
+h1 {
+    font-size: 2rem;
     margin-bottom: 20px;
-    font-size: 24px;
-    color: whitesmoke;
+    color: rgb(255, 247, 230);
+    animation: slideIn 0.8s ease-in-out;
 }
 
-.profile-edit-form .form-group {
-    margin-bottom: 15px;
+/* Параграф */
+p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    color: rgba(252, 235, 235, 0.94);
+    animation: slideIn 1s ease-in-out;
 }
 
-.profile-edit-form label {
-    display: block;
-    margin-bottom: 5px;
-    color: rgba(240, 236, 219, 0.9);
+/* Форма */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: slideIn 1.2s ease-in-out;
 }
 
-.file-input {
-
-
-}
-
-.file-label {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #555;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-
-/* Для отображения названия выбранного файла */
-.file-name {
-    margin-top: 5px;
-    color: #ccc;
-    font-size: 14px;
-}
-
-.form-group {
-            margin-bottom: 20px;
-}
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-}
-.button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* Стили для обычных текстовых полей */
-.text-input {
-    background-color: red;
-    width: 95%;
-    padding: 10px;
-    font-family: Handjet , serif;
-    border: none;
-    border-radius: 5px;
+/* Поле ввода */
+input[type="email"] {
+    padding: 12px;
+    border: 2px solid rgba(224, 224, 224, 0.54);
+    border-radius: 10px;
     background: rgba(196, 196, 196, 0.1);
     color: rgba(252, 235, 235, 0.94);
-    margin-bottom: 10px;
-}
-
-.text-input:focus {
+    font-size: 1rem;
     outline: none;
-    background: rgba(240, 236, 219, 0.2);
-}
-.file-input {
-    position: absolute;
-    width: 20%;
-    height: 100%;
-    opacity: 10; /* Скрываем сам инпут */
-    cursor: pointer;
-    z-index: 2;
+    transition: border-color 0.3s ease, background 0.3s ease;
 }
 
-/* Контейнер для отображения текста внутри инпута */
-.placeholder {
-    display: inline-block;
-    padding: 10px 20px;
-    color: rgba(255, 255, 255, 0.45);
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 5px;
-    pointer-events: none;
+input[type="email"]:focus {
+    border-color: rgb(255, 247, 230);
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.button-1 {
-    cursor: pointer;
-}
-/* Стили для состояния при наведении */
-.text-input:focus, .file-input:focus {
-    outline: none;
-    background: rgba(240, 236, 219, 0.2);
-}
-
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.go-btn {
-    flex: 1;
-    padding: 10px;
+/* Кнопки */
+button {
+    padding: 12px;
     border: none;
-    border-radius: 5px;
-    background: rgba(255, 231, 185, 0.6);
-    color: #343131;
-    font-family: 'Handjet', serif !important;
+    border-radius: 46px;
+    background: rgb(255, 247, 230);
+    color: #423f3f;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: inset 0px 0px 82px 3px rgba(0, 0, 0, 0.42);
 }
 
-
-.go-btn.danger {
-    background: rgb(255, 225, 122);
-    color: #2c2525;
-}
-
-.go-btn:hover {
+button:hover {
     background: rgb(255, 234, 147);
+    transform: translateY(-2px);
 }
 
-.go-btn.danger:hover {
-    background: rgb(239, 200, 46);
+button:active {
+    box-shadow: inset 0px 0px 0px 4px rgba(218, 217, 112, 0.934);
+    background: rgb(239, 193, 0);
+    transform: translateY(0);
 }
 
-.back-link {
-    display: block;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+/* Ссылка на выход */
+a {
     text-decoration: none;
-    font-size: 16px;
 }
 
-.back-link:hover {
-    color: white;
+a button {
+    width: 100%;
+    background: rgba(196, 196, 196, 0.1);
+    color: rgba(252, 235, 235, 0.94);
+    margin-top: 10px;
 }
 
-
-.modal {
-  display: none; /* Скрыть по умолчанию */
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+a button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.modal-content {
-  background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  border-radius: 8px;
-  width: 30%;
-  text-align: center;
-  position: relative;
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-.modal-content .close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.modal-content button {
-  margin: 10px;
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+    main {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    input[type="email"], button {
+        font-size: 0.9rem;
+    }
 }

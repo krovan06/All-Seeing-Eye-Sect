@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{% static 'Profile/css/my_aplications.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <link rel="stylesheet" href="{% static 'Profile/css/my_comments_table.css' %}">
 </head>
 <body>
     <canvas id="particlesCanvas"></canvas>
@@ -57,21 +60,26 @@
                         </td>
                         <td data-label="Дата создания">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
                         <td data-label="Комментарий">
-                            <a href="{% url 'post_detail' slug=comment.post.slug %}#comment-{{ comment.id }}"
-                               class="comment-link"
-                               data-comment-id="{{ comment.id }}"
-                               data-post-slug="{{ comment.post.slug }}">
-                                {{ comment.body }}
-                            </a>
-
-                            {% if comment.has_replies %}
-                                <span class="new-reply-indicator" id="indicator-{{ comment.id }}">°</span>
-                                <button class="mark-read-btn" data-comment-id="{{ comment.id }}">✔</button>
-                            {% endif %}
-                        </td>
+    <div class="comment-container">
+        {% if comment.has_replies %}
+            <div id="indicator-{{ comment.id }}" class="notification-indicator">🔔</div> <!-- Значок уведомления -->
+        {% endif %}
+        <a href="{% url 'post_detail' slug=comment.post.slug %}#comment-{{ comment.id }}"
+           class="comment-link"
+           data-comment-id="{{ comment.id }}"
+           data-post-slug="{{ comment.post.slug }}">
+            {{ comment.body }}
+        </a>
+        {% if comment.has_replies %}
+            <button class="mark-read-btn" data-comment-id="{{ comment.id }}">
+                <i class='bx bx-check'></i> Прочитано
+            </button>
+        {% endif %}
+    </div>
+</td>
                         <td data-label="Действия">  <!-- Ячейка для действий -->
                             {% if comment.user == request.user %}
-                                <button class="delete-comment-btn" data-comment-id="{{ comment.id }}">Удалить</button>
+                               <button class="delete-comment-btn animate__animated animate__bounceIn" data-comment-id="{{ comment.id }}"><i class='bx bx-trash'></i> Удалить</button>
                             {% endif %}
                         </td>
                     </tr>

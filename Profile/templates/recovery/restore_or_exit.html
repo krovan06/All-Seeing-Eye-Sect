@@ -5,13 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Восстановление аккаунта</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{% static 'Profile/css/change_profile.css' %}">
 </head>
 <body>
 
 <main>
-    <h1>Вы действительно удалили аккаунт</h1>
-    <p>Вы можете восстановить его в течение 30 дней, иначе все данные будут безвозвратно удалены.</p>
+    <h1>Восстановление аккаунта</h1>
+    <p>Вы можете восстановить текущий аккаунт с помощью почты. Если ваш аккаунт удален, то вы все еще можете восстановить его, введя почту, в течение 30 дней после удаления</p>
 
     <form method="POST" action="{% url 'send_recovery_email' %}">
         {% csrf_token %}

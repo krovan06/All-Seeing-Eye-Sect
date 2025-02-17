@@ -24,8 +24,9 @@
                 <i class="bx bx-x" id="close-icon"></i>
             </label>
             <nav class="header-content navbar">
+
                 <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
-                <a href="{% url 'register' %}" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
+                <a href="{% url 'logout' %}" class="header-text brotherhood">ВЫЙТИ</a>
             </nav>
         </div>
     </div>
@@ -64,7 +65,7 @@
         </div>
     </form>
 
-    <form method="POST" action="{% url 'delete_account' %}" onsubmit="return confirm('Вы уверены? Аккаунт можно восстановить в течение 30 дней.')">
+    <form method="POST" class= "delete" action="{% url 'delete_account' %}" onsubmit="return confirm('Вы уверены? Аккаунт можно восстановить в течение 30 дней.')">
         {% csrf_token %}
         <button type="submit" class="go-btn danger">Удалить аккаунт</button>
     </form>

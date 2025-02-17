@@ -1,0 +1,160 @@
+/* Основные стили для таблицы */
+.table-container {
+    width: 90%;
+    margin: 20px auto;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(5, 5, 5, 0.58);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    color: #fff;
+}
+
+th {
+    background-color: #262626;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Стили для кнопки "Удалить" */
+.delete-comment-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: 'Handjet', sans-serif;
+    color: #fff;
+    background-color: #ff4d4d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.delete-comment-btn:hover {
+    background-color: #ff1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.delete-comment-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.delete-comment-btn i {
+    font-size: 16px;
+}
+
+/* Стили для кнопки "Пометить как прочитанное" */
+.mark-read-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: 'Handjet', sans-serif;
+    color: #fff;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mark-read-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mark-read-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mark-read-btn i {
+    font-size: 16px;
+}
+
+/* Стили для индикатора новых ответов */
+.new-reply-indicator {
+    color: #ffec49;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+/* Стили для контейнера комментария */
+.comment-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff; /* Белый цвет текста */
+}
+
+/* Стили для текста комментария */
+.comment-link {
+    color: #fff; /* Белый цвет текста */
+    text-decoration: none;
+    transition: color 0.3s ease;
+    flex-grow: 1; /* Растягиваем текст на всю доступную ширину */
+}
+
+.comment-link:hover {
+    color: #ffec49; /* Желтый цвет при наведении */
+}
+
+/* Стили для значка уведомления */
+.notification-indicator {
+    color: #ffec49; /* Желтый цвет для значка */
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+/* Стили для кнопки "Прочитано" */
+.mark-read-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-family: 'Handjet', sans-serif;
+    color: #fff;
+    background-color: #4caf50; /* Зеленый цвет для кнопки */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto; /* Кнопка будет прижата к правому краю */
+}
+
+.mark-read-btn:hover {
+    background-color: #45a049; /* Более темный зеленый при наведении */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mark-read-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mark-read-btn i {
+    font-size: 16px;
+}
