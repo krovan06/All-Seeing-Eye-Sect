@@ -10,6 +10,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
 from django.utils.text import slugify
+from django.contrib.auth.tokens import default_token_generator
 
 
 
@@ -45,6 +46,24 @@ class Request(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+class LoginToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        """Проверяет, не истёк ли токен"""
+        return now() < self.created_at + timedelta(minutes=10)
+
+    @staticmethod
+    def generate_for(user):
+        """Создаёт или обновляет токен"""
+        token, _ = LoginToken.objects.update_or_create(
+            user=user,
+            defaults={"token": default_token_generator.make_token(user)}
+        )
+        return token.token
 
 class Comment(models.Model):
     post = models.ForeignKey(

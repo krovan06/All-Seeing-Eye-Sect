@@ -466,28 +466,57 @@ def delete_comment(request, comment_id):
     return redirect(request.META.get("HTTP_REFERER", "news_feed"))  # Возвращаем на страницу
 
 
+def login_with_token(request, token):
+    login_token = get_object_or_404(LoginToken, token=token)
+
+    if not login_token.is_valid():
+        messages.error(request, "Ссылка устарела, запросите новую.")
+        return redirect('login')  # На страницу ввода email
+
+    user = login_token.user
+    login(request, user)
+
+    # После успешного входа, удаляем токен
+    login_token.delete()
+
+    return redirect('user_profile', id=user.id)
+
 def send_recovery_email(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
             user = User.objects.get(email=email)
 
-            # Удаляем старый токен, если был
-            AccountRecoveryToken.objects.filter(user=user).delete()
+            if hasattr(user, 'userprofile') and user.userprofile.is_deleted:
+                # Аккаунт удалён — отправляем ссылку на восстановление
+                AccountRecoveryToken.objects.filter(user=user).delete()
+                token = AccountRecoveryToken.objects.create(user=user, token=uuid.uuid4())
 
-            # Создаём новый токен
-            token = AccountRecoveryToken.objects.create(user=user, token=uuid.uuid4())
+                reset_link = request.build_absolute_uri(reverse('recover_account', args=[token.token]))
 
-            reset_link = request.build_absolute_uri(reverse('recover_account', args=[token.token]))
+                send_mail(
+                    'Восстановление аккаунта',
+                    f'Для восстановления аккаунта перейдите по ссылке: {reset_link}',
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Ссылка для восстановления аккаунта отправлена на ваш email.')
 
-            send_mail(
-                'Восстановление аккаунта',
-                f'Для восстановления аккаунта перейдите по ссылке: {reset_link}',
-                settings.EMAIL_HOST_USER,
-                [email],
-                fail_silently=False,
-            )
-            messages.success(request, 'Инструкции по восстановлению отправлены на ваш email.')
+            else:
+                # Аккаунт активен — создаём временный токен для входа
+                login_token = LoginToken.generate_for(user)
+                login_link = request.build_absolute_uri(reverse('login_with_token', args=[login_token]))
+
+                send_mail(
+                    'Ваш личный кабинет',
+                    f'Для входа в ваш аккаунт перейдите по ссылке: {login_link}',
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Ссылка для быстрого входа отправлена на ваш email.')
+
         except User.DoesNotExist:
             messages.error(request, 'Пользователь с таким email не найден.')
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path('user/id/<int:id>/', user_profile, name='user_profile'),
     path('login/', CustomLoginView.as_view(), name='login'),
 
+    path('login-with-token/<str:token>/', login_with_token, name='login_with_token'),
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
 
     path('check-unique/', check_unique, name='check-unique'),
