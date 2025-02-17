@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="{% static 'Profile/css/aplication.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 <canvas id="particlesCanvas"></canvas>
@@ -47,7 +50,12 @@
       {% if user_requests %}
         {% for req in user_requests %}
         <tr>
-          <td data-label="Заголовок">{{ req.title }}</td>
+          <td data-label="Заголовок">
+            {{ req.title }}
+            {% if req.has_new_comments %}
+              <span style="color: red; font-weight: bold;">(Новый комментарий)</span>
+            {% endif %}
+          </td>
           <td data-label="Дата создания">{{ req.created_at|date:"d.m.Y H:i" }}</td>
           <td data-label="Статус">
             {% if req.status == 'pending' %}
@@ -61,6 +69,10 @@
           <td data-label="Действия" class="actions">
               <button> <a href="{% url 'edit_request' req.id %}"  class="btn-link" >Редактировать</a></button>
               <button class="delete"><a href="{% url 'delete_request_by_user' req.id %}" class="delete btn-link">Удалить</a></button>
+              <form action="{% url 'clear_notifications' %}" method="post" id="clear-notifications-form">
+                  {% csrf_token %}
+                  <button type="button" id="clear-notifications-btn" data-url="{% url 'clear_notifications' %}">Очистить уведомления</button>
+              </form>
               <div id="deleteModal" class="modal">
                 <div class="modal-content">
                   <span class="close">&times;</span>

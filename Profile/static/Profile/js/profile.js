@@ -94,3 +94,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+$(document).ready(function () {
+    $("#clear-notifications-btn").click(function (e) {
+        e.preventDefault(); // Предотвращаем стандартное поведение
+
+        const url = $(this).data("url"); // Получаем URL из data-атрибута
+        console.log("Отправка запроса на:", url);
+
+        // Получаем CSRF-токен из cookie
+        const csrftoken = getCookie('csrftoken');
+
+        $.ajax({
+            type: "POST",
+            url: url, // Используем правильный URL
+            headers: {
+                'X-CSRFToken': csrftoken, // Устанавливаем заголовок CSRF
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function (response) {
+                if (response.success) {
+                    console.log("✅ Уведомления очищены, записей обновлено:", response.updated);
+                    $("#notification-icon").fadeOut();
+                } else {
+                    console.error("⚠ Ошибка сервера:", response.error);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("❌ AJAX-ошибка:", status, error);
+                console.error("Ответ сервера:", xhr.responseText);
+            }
+        });
+    });
+
+    // Функция для получения CSRF-токена из cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Если cookie начинается с имени, добавляем '='
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});

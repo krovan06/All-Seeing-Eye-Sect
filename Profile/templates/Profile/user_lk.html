@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <title>Профиль</title>
 </head>
 <canvas id="particlesCanvas"></canvas>
@@ -76,7 +78,27 @@
     <!-- Секция "Мои заявки" -->
     <div class="friends-block myarch">
       <a href="{% url 'my_requests' %}">МОИ ЗАЯВКИ</a>
+      <span id="notification-icon">{% if has_new_comments %}💬{% endif %}</span>
     </div>
+
+<!--    <div class="friends-block myarch">-->
+<!--      <form action="{% url 'mark_notifications_as_read' %}" method="post">-->
+<!--          {% csrf_token %}-->
+<!--          <button type="submit">Отметить все как прочитанные</button>-->
+<!--      </form>-->
+<!--      {% if notifications %}-->
+<!--          <div class="notifications">-->
+<!--              <h3>Уведомления</h3>-->
+<!--              <ul>-->
+<!--                  {% for notification in notifications %}-->
+<!--                      <li>{{ notification.message }}</li>-->
+<!--                  {% endfor %}-->
+<!--              </ul>-->
+<!--          </div>-->
+<!--      {% else %}-->
+<!--          <p>Нет новых уведомлений.</p>-->
+<!--      {% endif %}-->
+<!--    </div>-->
 
   </div>
 </article>

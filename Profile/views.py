@@ -21,6 +21,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.http import JsonResponse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.views.generic import TemplateView
+from .models import AccountRecoveryToken
+from django.db.models import Case, When, Value, TextField, F
 import json
 
 
@@ -40,7 +45,7 @@ def view_request_detail(request, id):
 
 @login_required
 def my_requests(request):
-    user_requests = Request.objects.filter(user = request.user).order_by('-created_at')
+    user_requests = Request.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'requests/my_requests.html', {'user_requests': user_requests})
 
 @login_required
@@ -93,6 +98,17 @@ def delete_request(request, request_id):
     request_obj.delete()
     messages.success(request, f"Заявка '{request_obj.title}' успешно удалена.")
     return redirect('manage_requests')
+
+@login_required
+def clear_notifications(request):
+    if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({"success": False, "error": "Request is not AJAX"}, status=400)
+
+    if request.method == 'POST':
+        updated_count = Request.objects.filter(user=request.user, has_new_comments=True).update(has_new_comments=False)
+        return JsonResponse({"success": True, "updated": updated_count})
+
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
 
 def delete_request_by_user(request, request_id):
     """
@@ -182,8 +198,16 @@ def post_detail(request, slug):
         return comment
 
     # Получаем все комментарии с вложенностью
-    comments = Comment.objects.filter(post=post).select_related('user').prefetch_related('replies').order_by('created_at')
-    comments = Comment.objects.filter(post=post).order_by('-created_at')
+    # comments = Comment.objects.filter(post=post, is_deleted=False).order_by('-created_at')
+    comments = Comment.objects.filter(
+        post=post
+    ).annotate(
+        display_body=Case(
+            When(is_deleted=True, deleted_by=Comment.DELETED_BY_SYSTEM, then=Value("Пользователь удалил аккаунт")),
+            default=F('body'),
+            output_field=TextField(),
+        )
+    ).order_by('-created_at')
     form = CommentForm()
 
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -207,6 +231,12 @@ def post_detail(request, slug):
                     if parent_comment:
                         comment.parent = parent_comment  # Привязываем к родительскому комментарию
 
+                        # Отправляем уведомление родительскому комментарию
+                        # Например, добавляем поле has_replies для индикатора
+                        # Например, добавляем поле has_replies для индикатора
+                        parent_comment.has_replies = True
+                        parent_comment.save()
+
                 comment.save()
 
                 return JsonResponse({
@@ -225,6 +255,22 @@ def post_detail(request, slug):
         'comments': comments,
         'now': now(),
     })
+
+def mark_comment_read(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            comment_id = data.get("comment_id")
+            comment = Comment.objects.get(id=comment_id)
+            comment.has_replies = False  # Или другой флаг, обозначающий "прочитано"
+            comment.save()
+            return JsonResponse({"success": True})
+        except Comment.DoesNotExist:
+            return JsonResponse({"error": "Комментарий не найден"}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Неверный JSON"}, status=400)
+    return JsonResponse({"error": "Метод не поддерживается"}, status=405)
+
 
 def edit_comment(request, comment_id):
     if request.method == "POST":
@@ -254,13 +300,11 @@ def edit_comment(request, comment_id):
     return JsonResponse({"error": "Неверный метод"}, status=405)
 
 
+def UserCommentsView(request):
+    user_comments = Comment.objects.filter(user=request.user, is_deleted=False).order_by('-created_at')
 
-def UserCommentsView (request):
-    comments = Comment.objects.filter(user=request.user).select_related('post').order_by('-created_at')
-
-    # Передаем комментарии в шаблон
     return render(request, 'comments/my_comments.html', {
-        'comments': comments
+        'comments': user_comments
     })
 
 
@@ -299,48 +343,120 @@ def user_edit_profile(request, id):
 
     return render(request, 'Profile/edit_profile.html', {'form': form, 'user': request.user})
 
+
 @login_required
 def user_profile(request, id):
     user = get_object_or_404(User, id=id)
+
+    # Проверяем, есть ли новые комментарии в его заявках
+    has_new_comments = Request.objects.filter(user=user, has_new_comments=True).exists()
+
+    notifications = user.notifications.filter(is_read=False)  # Только непрочитанные уведомления
 
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('user_profile', id=user.id)  # Перенаправляем на страницу профиля
+            return redirect('user_profile', id=user.id)
     else:
         form = UserForm(instance=user)
 
-    return render(request, 'Profile/user_lk.html', {'form': form, 'user': user})
+    return render(request, 'Profile/user_lk.html', {
+        'form': form,
+        'user': user,
+        'notifications': notifications,
+        'has_new_comments': has_new_comments  # Передаём в шаблон
+    })
 
+@login_required
+def mark_notifications_as_read(request):
+    request.user.notifications.update(is_read=True)
+    return redirect('user_profile', id=request.user.id)
+
+def is_valid_email(email):
+    """Проверяет, является ли email валидным."""
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
 class DeleteAccountView(LoginRequiredMixin, View):
     def post(self, request):
-        user = request.user
-        user.delete()  # Удаляет объект пользователя
-        logout(request)  # Завершает сессию
-        return redirect('login')
+        user_profile = request.user.userprofile
+        user_profile.mark_deleted()
+
+        # Создаём токен восстановления
+        recovery_token, _ = AccountRecoveryToken.objects.get_or_create(
+            user=request.user,
+            defaults={"token": uuid.uuid4()}
+        )
+
+        # Отправляем письмо
+        if is_valid_email(request.user.email):
+            send_mail(
+                'Восстановление аккаунта',
+                f'Твой аккаунт можно восстановить в течение 30 дней. Перейди по ссылке: {request.build_absolute_uri(reverse("recover_account", args=[recovery_token.token]))}',
+                settings.EMAIL_HOST_USER,
+                [request.user.email],
+                fail_silently=True,
+            )
+
+        logout(request)
+        return redirect('delete_account')
+class RestoreAccountView(View):
+    def get(self, request, token):
+        recovery_token = get_object_or_404(AccountRecoveryToken, token=token, is_used=False)
+
+        if recovery_token.is_expired():
+            messages.error(request, "Токен истёк. Восстановление невозможно.")
+            return redirect('login')
+
+        user = recovery_token.user
+        user.is_active = True
+        user.username = f"restored_user_{user.id}"  # Можешь сохранять старое имя, если хранишь его где-то
+        user.save(update_fields=['is_active', 'username'])
+
+        if hasattr(user, 'userprofile'):
+            user_profile = user.userprofile
+            user_profile.restore_account()
+
+        recovery_token.is_used = True
+        recovery_token.save()
+
+        login(request, user)
+        messages.success(request, "Ваш аккаунт успешно восстановлен.")
+
+        return redirect('user_profile', id=user.id)
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)  # Только владелец удаляет свой коммент
+
+    if comment.replies.exists():  # Если есть ответы, заменяем текст и откладываем удаление
+        comment.body = "Этот комментарий был удалён пользователем"
+        comment.is_deleted = True
+        comment.delete_time = now() + timedelta(minutes=15)  # Полное удаление через 15 минут
+        comment.save()
+    else:
+        comment.delete()  # Если нет ответов, сразу удаляем
+
+    messages.success(request, "Комментарий удалён")
+    return redirect(request.META.get("HTTP_REFERER", "news_feed"))  # Возвращаем на страницу
 
 
 def send_recovery_email(request):
-    print("HOME")
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
-            print("LOCH")
             user = User.objects.get(email=email)
-            print(user, "<-user")
-            token, created = RecoveryToken.objects.get_or_create(user=user)
-            print(token, "<-token")
-            if not created:
-                token.token = uuid.uuid4()
-                token.save()
 
-            # Формирование ссылки для восстановления
-            reset_link = request.build_absolute_uri(
-                reverse('recover_account', args=[token.token])
-            )
+            # Удаляем старый токен, если был
+            AccountRecoveryToken.objects.filter(user=user).delete()
 
-            # Отправка email
+            # Создаём новый токен
+            token = AccountRecoveryToken.objects.create(user=user, token=uuid.uuid4())
+
+            reset_link = request.build_absolute_uri(reverse('recover_account', args=[token.token]))
+
             send_mail(
                 'Восстановление аккаунта',
                 f'Для восстановления аккаунта перейдите по ссылке: {reset_link}',
@@ -352,25 +468,10 @@ def send_recovery_email(request):
         except User.DoesNotExist:
             messages.error(request, 'Пользователь с таким email не найден.')
 
-    return render(request, 'registration/password_reset_form.html')
+        return redirect('restore_or_exit')
 
-def recover_account(request, token):
-    try:
-        recovery_token = RecoveryToken.objects.get(token=token)
-
-        if not recovery_token.is_valid():
-            messages.error(request, 'Срок действия токена истёк.')
-            return redirect('send_recovery_email')
-
-        # Восстановление: например, авторизация пользователя
-        login(request, recovery_token.user)
-        recovery_token.delete()  # Удаляем токен после использования
-        messages.success(request, 'Аккаунт успешно восстановлен.')
-        return redirect('user_profile', id=recovery_token.user.id)
-
-    except RecoveryToken.DoesNotExist:
-        messages.error(request, 'Неверный или недействительный токен.')
-        return redirect('send_recovery_email')
+class RestoreOrExitView(TemplateView):
+    template_name = 'recovery/restore_or_exit.html'
 
 #ПАРОЛИ
 def password_reset(request):

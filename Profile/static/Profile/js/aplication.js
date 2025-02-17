@@ -162,6 +162,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".mark-read-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            let commentId = this.getAttribute("data-comment-id");
+
+            fetch("/mark-comment-read/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value
+                },
+                body: JSON.stringify({ comment_id: commentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`indicator-${commentId}`).remove();
+                    this.remove();
+                }
+            })
+            .catch(error => console.error("Ошибка:", error));
+        });
+    });
+});
+
+
+// Обработчик нажатия на кнопку удаления комментария
+document.querySelectorAll('.delete-comment-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const commentId = this.getAttribute('data-comment-id');
+        if (confirm('Вы уверены, что хотите удалить этот комментарий?')) {
+            fetch(`/delete-comment/${commentId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Удаляем строку комментария из таблицы
+                    this.closest('tr').remove();
+                } else {
+                    alert('Ошибка при удалении комментария.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        }
+    });
+});
+
+
+
 
 
 (function() {

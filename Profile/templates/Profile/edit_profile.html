@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,17 +17,15 @@
 <header>
     <div class="main-header-container">
         <div class="content-container">
-            <a href="" class="logo">KROVAN|website</a>
+            <a href="{% url 'home_page' %}" class="logo">KROVAN|website</a>
             <input type="checkbox" id="check">
             <label for="check" class="icons">
                 <i class="bx bx-menu" id="menu-icon"></i>
                 <i class="bx bx-x" id="close-icon"></i>
             </label>
             <nav class="header-content navbar">
-                <a href="news.html" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
-                <a href="games.html" class="header-text games">АРХИВ ИГРОВОЙ ВСЕЛЕННОЙ</a>
-                <a href="#interesting" class="header-text more">УЗНАТЬ БОЛЬШЕ</a>
-                <a href="log.html" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
+                <a href="{% url 'news_feed' %}" class="header-text news">ПОТОК РЕАЛЬНОСТИ</a>
+                <a href="{% url 'register' %}" class="header-text brotherhood">ВСТУПИТЬ В СЕКТУ</a>
             </nav>
         </div>
     </div>
@@ -41,33 +39,39 @@
             <div class="form-group">
                 {{ form.username.label_tag }}
                 {{ form.username }}
-
             </div>
 
             <div class="form-group">
                 {{ form.avatar.label_tag }}
                 {{ form.avatar }}
-                <div id="avatar-placeholder" class="placeholder">{% if form.avatar.value %}Выбран файл: {{ form.avatar.value }}{% else %}Выберите файл...{% endif %}</div>
+                <div id="avatar-placeholder" class="placeholder">
+                    {% if form.avatar.value %}Выбран файл: {{ form.avatar.value }}{% else %}Выберите файл...{% endif %}
+                </div>
             </div>
 
             <div class="form-group">
                 {{ form.background.label_tag }}
                 {{ form.background }}
-                <div id="background-placeholder" class="placeholder">{% if form.background.value %}Выбран файл: {{ form.background.value }}{% else %}Выберите файл...{% endif %}</div>
+                <div id="background-placeholder" class="placeholder">
+                    {% if form.background.value %}Выбран файл: {{ form.background.value }}{% else %}Выберите файл...{% endif %}
+                </div>
             </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="go-btn">Сохранить</button>
-                    <button type="button" class="go-btn secondary"><a  href="{% url 'password_reset' %}" class="change-pass-link">Сбросить пароль</a></button>
-                    <form method="POST" action="{% url 'delete_account' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="go-btn danger">Удалить аккаунт</button>
-                    </form>
-                </div>
-
-                <a href="{% url 'user_profile' id=user.id %}" class="back-link">Назад к профилю</a>
+            <div class="form-actions">
+                <button type="submit" class="go-btn">Сохранить</button>
+                <a href="{% url 'password_reset' %}" class="go-btn secondary">Сбросить пароль</a>
+            </div>
         </div>
     </form>
+
+    <form method="POST" action="{% url 'delete_account' %}" onsubmit="return confirm('Вы уверены? Аккаунт можно восстановить в течение 30 дней.')">
+        {% csrf_token %}
+        <button type="submit" class="go-btn danger">Удалить аккаунт</button>
+    </form>
+
+    {% if user.id %}
+        <a href="{% url 'user_profile' id=user.id %}" class="back-link">Назад к профилю</a>
+    {% endif %}
 </main>
 
 <script src="{% static 'Profile/js/change_profile.js' %}"></script>

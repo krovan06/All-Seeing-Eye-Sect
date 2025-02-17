@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Восстановление аккаунта</title>
+    <link rel="stylesheet" href="{% static 'Profile/css/change_profile.css' %}">
+</head>
+<body>
+
+<main>
+    <h1>Вы действительно удалили аккаунт</h1>
+    <p>Вы можете восстановить его в течение 30 дней, иначе все данные будут безвозвратно удалены.</p>
+
+    <form method="POST" action="{% url 'send_recovery_email' %}">
+        {% csrf_token %}
+        <label for="email">Введите вашу почту:</label>
+        <input type="email" name="email" id="email" required>
+        <button type="submit">Отправить ссылку</button>
+    </form>
+
+    <a href="{% url 'login' %}"><button>Выйти</button></a>
+</main>
+
+</body>
+</html>

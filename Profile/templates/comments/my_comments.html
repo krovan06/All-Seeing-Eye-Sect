@@ -20,7 +20,7 @@
     <header>
         <div class="main-header-container">
             <div class="content-container">
-                <a href="" class="logo">KROVAN|website</a>
+                <a href="{% url 'news_feed' %}" class="logo">KROVAN|website</a>
                 <input type="checkbox" id="check">
                 <label for="check" class="icons">
                     <i class="bx bx-menu" id="menu-icon"></i>
@@ -43,6 +43,7 @@
                     <th>К посту</th>
                     <th>Дата создания</th>
                     <th>Комментарий</th>
+                    <th>Действия</th>  <!-- Новый столбец для действий -->
                 </tr>
             </thead>
             <tbody>
@@ -50,20 +51,42 @@
                     {% for comment in comments %}
                     <tr>
                         <td data-label="К посту">
-                            <a href="{% url 'post_detail' slug=comment.post.slug %}" class="btn-link">{{ comment.post.title }}</a>
+                            <a href="{% url 'post_detail' slug=comment.post.slug %}" class="btn-link">
+                                {{ comment.post.title }}
+                            </a>
                         </td>
                         <td data-label="Дата создания">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
-                        <td data-label="Комментарий">{{ comment.body }}</td>
+                        <td data-label="Комментарий">
+                            <a href="{% url 'post_detail' slug=comment.post.slug %}#comment-{{ comment.id }}"
+                               class="comment-link"
+                               data-comment-id="{{ comment.id }}"
+                               data-post-slug="{{ comment.post.slug }}">
+                                {{ comment.body }}
+                            </a>
+
+                            {% if comment.has_replies %}
+                                <span class="new-reply-indicator" id="indicator-{{ comment.id }}">°</span>
+                                <button class="mark-read-btn" data-comment-id="{{ comment.id }}">✔</button>
+                            {% endif %}
+                        </td>
+                        <td data-label="Действия">  <!-- Ячейка для действий -->
+                            {% if comment.user == request.user %}
+                                <button class="delete-comment-btn" data-comment-id="{{ comment.id }}">Удалить</button>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="3" class="text-center">Вы еще не оставили ни одного комментария.</td>
+                        <td colspan="4" class="text-center">Вы еще не оставили ни одного комментария.</td>
                     </tr>
                 {% endif %}
             </tbody>
         </table>
     </div>
+
+    <!-- CSRF-токен для AJAX-запросов -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <script src="{% static 'Profile/js/aplication.js' %}"></script>
 </body>

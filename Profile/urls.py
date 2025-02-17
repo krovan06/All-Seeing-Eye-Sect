@@ -17,10 +17,11 @@ urlpatterns = [
     path('password-reset/', password_reset, name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
 
-    path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
+    path('delete-account/', DeleteAccountView.as_view(), name='delete_account'),
     path('recover/', send_recovery_email, name='send_recovery_email'),
-    path('recovery/<uuid:token>/', recover_account, name='recover_account'),
 
+    path('restore-or-exit/', RestoreOrExitView.as_view(), name='restore_or_exit'),
+    path('recover-account/<str:token>/', RestoreAccountView.as_view(), name='recover_account'),
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user-detail'),
 
@@ -39,6 +40,11 @@ urlpatterns = [
 
     path('my-comments/', UserCommentsView, name='user_comments'),
     path('edit_comment/<int:comment_id>/', edit_comment, name='edit_comment'),
+    path('delete-comment/<int:comment_id>/', delete_comment, name='delete_comment'),
+
+    path("mark-comment-read/", mark_comment_read, name="mark_comment_read"),
+    path('notifications/read/', mark_notifications_as_read, name='mark_notifications_as_read'),
+    path('notifications/clear/', clear_notifications, name='clear_notifications'),
 
     path('news/', news_feed, name='news_feed'),
     path('home/', home_page, name='home_page'),
