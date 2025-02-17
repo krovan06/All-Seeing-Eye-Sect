@@ -1,19 +1,79 @@
+
 ::placeholder {
   font-family: 'Handjet', serif;
 }
+
 .agreement-block {
   display: flex;
+  width: 80%;
   flex-direction: row;
   align-items: center;
   gap: 8px; /* Расстояние между чекбоксом и текстом */
 }
 
-
 .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-  display: none;
+  color: #000000; /* Красный цвет текста */
+  font-size: 14px; /* Размер шрифта */
+  margin-top: 5px; /* Отступ сверху */
+  display: none; /* Скрываем по умолчанию */
+  position: absolute; /* Абсолютное позиционирование */
+  top: 100%; /* Располагаем под инпутом */
+  left: 0;
+  background-color: #fff; /* Белый фон */
+  padding: 8px 12px; /* Внутренние отступы */
+  border: 1px solid #ff4d4d; /* Красная рамка */
+  border-radius: 8px; /* Закругленные углы */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тень для эффекта всплывания */
+  z-index: 10; /* Чтобы сообщение было поверх других элементов */
+  width: auto; /* Ширина сообщения */
+  box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Добавляем треугольник (указатель) */
+.error-message::before {
+  content: '';
+  position: absolute;
+  top: -10px; /* Располагаем выше сообщения */
+  left: 20px; /* Позиционируем по горизонтали */
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #ffffff; /* Цвет треугольника */
+}
+
+
+.input-container {
+  position: relative; /* Для позиционирования сообщений об ошибках */
+  margin-bottom: 20px; /* Увеличиваем расстояние между инпутами */
+  width: 80%; /* Ширина контейнера */
+}
+
+.input-container optional- {
+  position: relative; /* Для позиционирования сообщений об ошибках */
+  margin-bottom: 20px; /* Увеличиваем расстояние между инпутами */
+  width: 80%; /* Ширина контейнера */
+}
+
+.input-error {
+  border: 2px solid red !important;
+}
+
+.log-line, .pass-line, .optional-mail, .optional-number {
+  margin-bottom: 0;
+  width: 100%; /* Ширина инпутов на всю ширину контейнера */
+  height: 40px; /* Фиксированная высота инпутов */
+  box-sizing: border-box;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.71);
+  color: aliceblue;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
+  padding: 0 10px; /* Отступы внутри инпутов */
+}
+
+@media (max-width: 768px) {
+  .log-line, .pass-line, .optional-mail, .optional-number {
+    font-size: 14px; /* Уменьшаем размер шрифта на мобильных устройствах */
+  }
 }
 
 .shake {
@@ -32,20 +92,19 @@
   }
 }
 
-.eye-container {
-  margin-top: 5%;
-  width: 100%;
 
+
+.eye-container {
+  margin-top: 3%;
+  width: 100%;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.log-line, .pass-line, .optional-mail, .optional-number {
-  padding-left: 2vh;
-  font-family: 'Handjet', serif;
+a {
+  color: #bea8a8;
 }
-
 .eye {
   width: 300px;
   height: 150px;
@@ -54,6 +113,30 @@
   border-radius: 50% / 100%;
   background-color: black;
   overflow: hidden;
+}
+
+.agreement-block {
+  position: relative; /* Для позиционирования ошибки */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2%;
+}
+
+#checkbox-error {
+  position: absolute;
+  top: 100%; /* Располагаем под блоком */
+  left: 0;
+}
+/* Убираем стандартный outline и добавляем кастомный */
+.log-line:focus, .pass-line:focus, .optional-mail:focus, .optional-number:focus {
+  outline: none; /* Убираем стандартный outline */
+  border: 2px solid #ffffff; /* Белая рамка при фокусе */
+}
+
+/* Если инпут с ошибкой, то рамка должна быть красной */
+.input-error:focus {
+  border: 2px solid red !important;
 }
 
 .iris {
@@ -79,60 +162,79 @@
   transform: translate(-50%, -50%);
 }
 
-/**/
-
 .logreg-question {
   color: aliceblue;
-
+  margin-top: 9%;
 }
 
 .main-reg-container {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  margin-top: 5%;
+  margin-top: 0;
   width: 100%;
   height: 60vh;
 }
 
-.logreg-block {
-  width: 400px;
-  height: 100%;
-
+#logreg-block {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-direction: column;
-  gap: 10px;
+  align-items: center; /* Выравнивание элементов по центру */
 
+}
+
+.logreg-block {
+  width: 370px;
+  margin-top: 4%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   border-radius: 10px;
   backdrop-filter: blur(2px);
   background: rgba(0, 0, 0, 0.37);
 }
 
-.log-line, .optional-mail {
-  height: 10%;
-  width: 80%;
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.log-line, .pass-line, .optional-mail, .optional-number {
+  width: 100%;
+  height: 40px;
   box-sizing: border-box;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.71);
-
   color: aliceblue;
-  font-size: 25px;
+  font-size: 16px;
+  padding: 0 10px;
+}
+
+.log-line, .optional-mail {
+  height: 40px; /* Фиксированная высота инпутов */
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.71);
+  color: aliceblue;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
 }
 
 .pass-line {
-  height: 10%;
-  width: 80%;
+  height: 40px; /* Фиксированная высота инпутов */
+  width: 100%;
   box-sizing: border-box;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.71);
-
   color: aliceblue;
-  font-size: 25px;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
 }
 
 .logreg-btn {
@@ -165,7 +267,7 @@
 .btn-link {
   text-decoration: none; /* Убираем подчеркивание */
   color: rgb(0, 0, 0); /* Цвет текста */
-  font-size: 25px;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
   display: inline-block; /* Чтобы можно было регулировать отступы */
   width: 100%;
   text-align: center;
@@ -175,11 +277,10 @@
   color: aliceblue; /* Меняем цвет текста при наведении */
 }
 
-
 .reg-link {
   text-decoration: none;
   color: rgb(255, 255, 255);
-  font-size: 25px;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
   transition: 0.3s;
 }
 
@@ -193,29 +294,24 @@
   justify-content: space-between;
   flex-direction: column;
   width: 80%;
-  height: 20%;
+  height: 40%;
 }
 
 .optional-text {
   color: aliceblue;
+  width: 80%;
   text-align: center;
 }
 
-.input-error {
-  border: 2px solid red;
-}
-
-
 .optional-number {
-  height: 30%;
-  width: 100%;
+  height: 40px; /* Фиксированная высота инпутов */
+  width: 100% !important;
   box-sizing: border-box;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.71);
-
   color: aliceblue;
-  font-size: 25px;
+  font-size: 16px; /* Уменьшаем размер шрифта для адаптивности */
 }
 
 .agreement-window {
@@ -224,8 +320,6 @@
   height: 50px;
   background-color: aliceblue;
 }
-
-/*ШРИФТЫ*/
 
 body {
   font-family: 'Handjet', serif;
@@ -238,8 +332,6 @@ body {
   padding: 0;
 }
 
-
-/* Стили для модального окна */
 .modal {
   display: none; /* Скрыто по умолчанию */
   position: fixed;
@@ -279,11 +371,7 @@ body {
 
 @media screen and (max-width: 340px) {
   .logreg-question {
+    margin-top: 20%;
     font-size: 4vh;
   }
-
-}
-
-button {
-    font-family:'Handjet', serif;
 }

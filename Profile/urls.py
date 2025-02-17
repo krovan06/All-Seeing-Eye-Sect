@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('user/id/<int:id>/edit/', user_edit_profile, name='user_edit_profile'),
 
+    path('check-unique/', check_unique, name='check-unique'),
     path('password-reset/', password_reset, name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
 

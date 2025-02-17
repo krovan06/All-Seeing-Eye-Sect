@@ -11,6 +11,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/jquery.inputmask.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/inputmask.min.js"></script>
+
   <link href="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/colormask.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="{% static 'Profile/css/reg.css' %}">
@@ -30,64 +33,73 @@
       </div>
     </div>
   </div>
-  <form method="POST" action="{% url 'register' %}" class="main-reg-container">
-    {% csrf_token %}
-    <div class="main-reg-container">
-      <div class="logreg-block">
-        <h1 class="logreg-question">Меня зовут \@!&7%06, а вас?</h1>
 
-        <input type="text" class="log-line" id="username" name="username" placeholder="Логин" value="{{ form.username.value|default:'' }}">
+  <div class="main-reg-container">
+  <div class="logreg-block">
+    <h1 class="logreg-question">Меня зовут \@!&7%06, а вас?</h1>
+
+    <!-- Форма регистрации -->
+    <form id="logreg-block" method="POST">
+      {% csrf_token %}
+
+      <!-- Логин -->
+      <div class="input-container">
+        <input type="text" class="log-line" id="username" placeholder="Логин">
         <div class="error-message" id="username-error"></div>
-        {% if form.username.errors %}
-          <div class="error">{{ form.username.errors.0 }}</div>
-        {% endif %}
+      </div>
 
-        <input type="password" name="password1" class="pass-line" id="password" placeholder="Пароль">
+      <!-- Пароль -->
+      <div class="input-container">
+        <input type="password" class="pass-line" id="password1" placeholder="Пароль">
         <div class="error-message" id="password-error"></div>
+      </div>
 
-        <input type="password" name="password2" class="pass-line" id="password2" placeholder="Повтори свой пароль">
+      <!-- Повтор пароля -->
+      <div class="input-container">
+        <input type="password" class="pass-line" id="password2" placeholder="Повтори свой пароль">
         <div class="error-message" id="password2-error"></div>
+      </div>
 
-        <input type="email" name="email" class="optional-mail" id="email" placeholder="{% if form.email.errors %}{{ form.email.errors.0 }}{% else %}Ваша почта{% endif %}">
+      <!-- Почта -->
+      <div class="input-container">
+        <input type="mail" class="optional-mail" id="email" placeholder="Ваша почта">
         <div class="error-message" id="email-error"></div>
-        {% if form.email.errors %}
-          <div class="error">{{ form.email.errors.0 }}</div>
-        {% endif %}
+      </div>
 
-        <div class="optional">
-          <p class="optional-text">эти данные потребутся для полного фукнционала аккаунта, вы сможете ввести их в личном кабинете.</p>
+      <!-- Телефон -->
+      <p class="optional-text">Телефон потребуется для полного функционала аккаунта, вы сможете ввести его в личном кабинете.</p>
+      <div class="input-container">
+        <input type="tel" id="phone" class="optional-number" placeholder="+7 (___) ___--">
+        <div class="error-message" id="phone-error"></div>
+      </div>
 
-          <input type="tel" id="phone" class="optional-number" placeholder="+7 (___) ___-__-__">
-          <div class="error-message" id="phone-error"></div>
-        </div>
-
-        <div class="agreement-block">
-          <input type="checkbox" name="agreement" id="agreement-checkbox" value="accepted">
-          <a href="#" id="agreement-link">Пользовательское соглашение</a>
-
-        </div>
+      <!-- Чекбокс соглашения -->
+      <div class="agreement-block">
+        <input type="checkbox" id="agreement-checkbox">
+        <a href="#" id="agreement-link">Пользовательское соглашение</a>
         <div class="error-message" id="checkbox-error"></div>
+      </div>
 
-        <div id="agreement-modal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Пользовательское соглашение</h2>
-            <p>Это был текст пользовательского соглашения. Пожалуйста, внимательно прочитайте.</p>
-          </div>
-        </div>
-
-        <div class="logreg-btn">
-          <div class="log-btn">
-            <button type="submit" class="btn-link" id="submit-btn">ПОДТВЕРДИТЬ</button>
-          </div>
+      <!-- Модальное окно соглашения -->
+      <div id="agreement-modal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Пользовательское соглашение</h2>
+          <p>Это был текст пользовательского соглашения. Пожалуйста, внимательно прочитайте.</p>
         </div>
       </div>
-    </div>
-  </form>
 
+      <!-- Кнопка подтверждения -->
+      <div class="logreg-btn">
+        <div class="log-btn">
+          <a class="btn-link" id="submit-btn">ПОДТВЕРДИТЬ</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
-
-  <script src="{% static 'Profile/js/star.js' %}"></script>
   <script src="{% static 'Profile/js/reg.js' %}"></script>
+  <script src="{% static 'Profile/js/star.js' %}"></script>
 </body>
 </html>

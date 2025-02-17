@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,6 +20,13 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
+
+CELERY_BEAT_SCHEDULE = {
+    'clear-deleted-comments-every-5-minutes': {
+        'task': 'your_app_name.tasks.clear_deleted_comments',  # Замените на имя вашего приложения
+        'schedule': crontab(minute='*/1'),  # Каждую 1 минуту
+    },
+}
 
 
 # Application definition

@@ -160,12 +160,32 @@ def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserRegistrationForm()
 
+            form.save()  # Сохраняем пользователя
+            return JsonResponse({'success': True})  # Успешная регистрация
+        else:
+            # Если форма невалидна, возвращаем ошибки
+            print(form.errors)
+            return JsonResponse({'errors': form.errors}, status=400)
+
+    form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def check_unique(request):
+    field = request.GET.get('field')
+    value = request.GET.get('value')
+
+    if not field or not value:
+        return JsonResponse({'error': 'Некорректные параметры'}, status=400)
+
+    # Проверка уникальности для username
+    if field == 'username' and User.objects.filter(username=value).exists():
+        return JsonResponse({'unique': False})
+    # Проверка уникальности для email
+    if field == 'email' and User.objects.filter(email=value).exists():
+        return JsonResponse({'unique': False})
+
+    return JsonResponse({'unique': True})
 
 class CustomLoginView(View):
     def get(self, request):
@@ -236,6 +256,9 @@ def post_detail(request, slug):
                         # Например, добавляем поле has_replies для индикатора
                         parent_comment.has_replies = True
                         parent_comment.save()
+
+                req.has_new_comments = True
+                req.save(update_fields=["has_new_comments"])
 
                 comment.save()
 
